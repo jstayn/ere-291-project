@@ -63,19 +63,19 @@ m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"]))
 ######## Decision variables ########
 ####################################
 
-@variable(m, CO2[1:T+1] >= 0, start=401)
-@variable(m, PM25[1:T+1] >= 0, start=1000)
+
+@variable(m, CO2[1:T+1] >= 0, start=400)
+@variable(m, PM25[1:T+1] >= 0, start=100)
 @variable(m, CMH[1:T] >= 0, start=1)
 @variable(m, N >= 0, start=1)
 @variable(m, A[1:T] >= 0)
-@NLexpression(m, N, R/k*sum(A[t] for t in 1:T))
 
 ######################################
 ######## Objective Functions #########
 ######################################
 
 #Minimize the total cost, equal to the sum of the cost of fan electricity over the operational period, plus the cost of PM2.5 filter replacements
-@NLobjective(m, Min, Celec*P*sum(CMH[t] for t in 1:T) + Cfilter*N)
+@objective(m, Min, Celec*P*sum(CMH[t] for t in 1:T) + Cfilter*N)
 
 ######################################
 ############# Constraints ############
@@ -83,7 +83,7 @@ m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"]))
 
 #CO2 concentration in the room at time t is equal to the CO2 concentration in the room at t-1 plus (the CO2 mass introduced at t-1 minus the CO2 mass removed at t-1) divided by the room volume
 #Consider concentrations to be measured at the END of each hour
-@constraint(m, [t=2:T], CO2[t] == CO2[t-1] + (roomCO2Source[101][t] - CMH[t]*(CO2[t]-AMB_CO2[t]))/roomData[101][2])
+@NLconstraint(m, [t=2:T], CO2[t] == CO2[t-1] + (roomCO2Source[101][t] - CMH[t]*(CO2[t]-AMB_CO2[t]))/roomData[101][2])
 
 #PM2.5 concentration in the room at time t is equal to the PM 2.5 in the room at t-1 plus the mass of PM2.5 introduced at t-1 divided by the room volume
 @constraint(m, [t=2:T], PM25[t] == PM25[t-1] + (CMH[t]*AMB_PM2_5[t] - A[t])/roomData[101][2])
@@ -99,6 +99,8 @@ m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"]))
 #CO2 and PM2.5 levels must not exceed maximum allowable levels.  Constraints do not apply to first timestep, since conditioning has not yet been applied.
 @constraint(m, [t=2:T], PM25[t] <= PM25_MAX)
 @constraint(m, [t=2:T], CO2[t] <= CO2_MAX)
+
+@constraint(m, N == R/k*sum(A[t] for t in 1:T))
 
 ######################################
 ########### Print and solve ##########
