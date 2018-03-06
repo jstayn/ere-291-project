@@ -9,6 +9,9 @@ using Clp
 using Cbc
 using AmplNLWriter
 
+using DataFrames
+using Gadfly
+
 ###############################
 ######### Define Sets #########
 ###############################
@@ -57,7 +60,7 @@ CO2_0 = AMB_CO2[1]
 ######### Initialize Model #########
 ####################################
 
-m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"]))
+m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2", "ms_enable=1"]))
 
 ####################################
 ######## Decision variables ########
@@ -125,3 +128,46 @@ println("CO2result [ppm]: ", CO2result)
 println("PM25result [ug/m3]: ", PM25result)
 println("PM25absorbedresult [ug]: ", PM25Absorbedresult)
 println("Nfilter [num]: ", Nfilter)
+
+
+# Plotting -- use Pkg.add("Gadfly") if you don't have it installed
+#= Each plot will work individually by plotting into the "plot" sector of Atom.
+* To see them all together, make sure all the plots are defined and then run the
+* vstack command in the REPL. That will make it open in your browser!
+=#
+
+CMH_plot =
+    plot(
+        x = 1:length(CMHresult),
+        y = CMHresult,
+        Geom.line,
+        Guide.Title("CMH at timestep x")
+    )
+
+CO2_plot =
+    plot(
+        x = 0:length(CO2result) - 1,
+        y = CO2result,
+        Geom.line,
+        Guide.Title("CO2 Concentration inside room (ppm)")
+    )
+
+PM25_plot =
+    plot(
+        x = 0:length(PM25result) - 1,
+        y = PM25result,
+        Geom.line,
+        Guide.Title("PM2.5 Concentration (µg)")
+    )
+PM25_absorbed_plot =
+    plot(
+        x = 1:length(PM25Absorbedresult),
+        y = PM25Absorbedresult,
+        Geom.line,
+        Guide.Title("PM2.5 Removed by Filters")
+    )
+
+final = vstack(hstack(CMH_plot, CO2_plot), hstack(PM25_plot, PM25_absorbed_plot))
+
+img = SVG("Debugging Plots.svg", 12inch, 12inch)
+draw(img, final)
