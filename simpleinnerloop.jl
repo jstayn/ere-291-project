@@ -86,10 +86,10 @@ m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2", "
 
 #CO2 concentration in the room at time t is equal to the CO2 concentration in the room at t-1 plus (the CO2 mass introduced at t-1 minus the CO2 mass removed at t-1) divided by the room volume
 #Consider concentrations to be measured at the END of each hour
-@NLconstraint(m, [t=2:T], CO2[t] == CO2[t-1] + (roomCO2Source[101][t] - CMH[t]*(CO2[t]-AMB_CO2[t]))/roomData[101][2])
+@NLconstraint(m, [t=2:T+1], CO2[t] == CO2[t-1] + (roomCO2Source[101][t] - CMH[t]*(CO2[t]-AMB_CO2[t]))/roomData[101][2])
 
 #PM2.5 concentration in the room at time t is equal to the PM 2.5 in the room at t-1 plus the mass of PM2.5 introduced at t-1 divided by the room volume
-@constraint(m, [t=2:T], PM25[t] == PM25[t-1] + (CMH[t]*AMB_PM2_5[t] - A[t])/roomData[101][2])
+@constraint(m, [t=2:T+1], PM25[t] == PM25[t-1] + (CMH[t]*AMB_PM2_5[t] - A[t])/roomData[101][2])
 
 #set dummy initial condition to ambient concentrations
 @constraint(m, PM25[1] == PM25_0)
@@ -100,8 +100,8 @@ m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2", "
 @constraint(m, CO2[T+1] == CO2[1])
 
 #CO2 and PM2.5 levels must not exceed maximum allowable levels.  Constraints do not apply to first timestep, since conditioning has not yet been applied.
-@constraint(m, [t=2:T], PM25[t] <= PM25_MAX)
-@constraint(m, [t=2:T], CO2[t] <= CO2_MAX)
+@constraint(m, [t=2:T+1], PM25[t] <= PM25_MAX)
+@constraint(m, [t=2:T+1], CO2[t] <= CO2_MAX)
 
 @constraint(m, N == R/k*sum(A[t] for t in 1:T))
 
