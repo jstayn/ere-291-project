@@ -6,6 +6,7 @@
 
 # Simple outer loop
 using inner_loop
+using Gadfly
 
 
 T = 24
@@ -23,12 +24,14 @@ feasibility, cost = operations_optimization(T, P, capacity)
 optimal_cost = Inf
 best = 0
 
+ops_costs = []
 
 for i = 1:size(equip_data)[1]
     feasibility, ops_cost = operations_optimization(T, 1 / equip_efficiency[i],
                                                     equip_capacity[i])
     if feasibility
         total_cost =  365 * ops_cost + equip_costs[i]
+        push!(ops_costs, 365 * ops_cost)
         if total_cost < optimal_cost
             optimal_cost = total_cost
             best = i
@@ -42,3 +45,14 @@ end
 
 println("Best AHU: ", best, "\n",
         "Optimal Cost: ", optimal_cost)
+
+ops_vs_cap = plot(
+    x = equip_costs,
+    y = ops_costs,
+    Geom.line,
+    Guide.XLabel("Capital Costs (RMB)"),
+    Guide.YLabel("Operating Costs (RMB)")
+    )
+
+img = SVG("Op Costs vs Capital Costs.svg", 4inch, 4inch)
+draw(img, ops_vs_cap)

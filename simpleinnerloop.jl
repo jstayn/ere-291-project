@@ -148,7 +148,9 @@ CMH_plot =
         x = 1:length(CMHresult),
         y = CMHresult,
         Geom.line,
-        Guide.Title("CMH at timestep x")
+        Guide.Title("Airflow into building"),
+        Guide.XLabel("Time (hrs)"),
+        Guide.YLabel("Airflow (m^3/hr)")
     )
 
 CO2_plot =
@@ -156,7 +158,9 @@ CO2_plot =
         x = 0:length(CO2result) - 1,
         y = CO2result,
         Geom.line,
-        Guide.Title("CO2 Concentration inside room (ppm)")
+        Guide.Title("CO2 Concentration inside room"),
+        Guide.XLabel("Time (hrs)"),
+        Guide.YLabel("CO2 Concentration (ppm)")
     )
 
 PM25_plot =
@@ -164,14 +168,18 @@ PM25_plot =
         x = 0:length(PM25result) - 1,
         y = PM25result,
         Geom.line,
-        Guide.Title("PM2.5 Concentration (µg)")
+        Guide.Title("PM2.5 Concentration"),
+        Guide.XLabel("Time (hrs)"),
+        Guide.YLabel("PM2.5 Concentration (µg/m^3)")
     )
 PM25_absorbed_plot =
     plot(
         x = 1:length(PM25Absorbedresult),
         y = PM25Absorbedresult,
         Geom.line,
-        Guide.Title("PM2.5 Removed by Filters")
+        Guide.Title("PM2.5 Removed by Filters"),
+        Guide.XLabel("Time (hrs)"),
+        Guide.YLabel("PM2.5 Removed (µg)")
     )
 
 final = vstack(hstack(CMH_plot, CO2_plot), hstack(PM25_plot, PM25_absorbed_plot))
