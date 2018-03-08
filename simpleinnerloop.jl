@@ -9,7 +9,6 @@ using Clp
 using Cbc
 using AmplNLWriter
 
-using DataFrames
 using Gadfly
 
 ###############################
@@ -116,7 +115,7 @@ CO2result = getvalue(CO2)
 PM25result = getvalue(PM25)
 CMHresult = getvalue(CMH)
 Nfilter = getvalue(N)
-PM25Absorbedresult = getvalue(A)
+PM25Absorbedresult = getvalue(roomPM25Sink)
 
 fmax = maximum(CMHresult)
 cost = getobjectivevalue(m)
