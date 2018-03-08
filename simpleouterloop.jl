@@ -19,19 +19,22 @@ equip_costs = equip_data[:, 2]
 equip_capacity = equip_data[:, 3]
 equip_efficiency = equip_data[:, 4] / 100
 
-feasibility, cost = operations_optimization(T, P, capacity)
-
 optimal_cost = Inf
 best = 0
 
 ops_costs = []
 
+# Note that right now our inner loop is implemented such that the efficiency
+# number it takes is in kWh/m^3 where more efficiency numbers are given in
+# m^3/kWh, so we take the inverse of the efficiency when we pass it in on line
+# 33. 
+
 for i = 1:size(equip_data)[1]
     feasibility, ops_cost = operations_optimization(T, 1 / equip_efficiency[i],
                                                     equip_capacity[i])
     if feasibility
-        total_cost =  365 * ops_cost + equip_costs[i]
-        push!(ops_costs, 365 * ops_cost)
+        total_cost =  ops_cost + equip_costs[i]
+        push!(ops_costs, ops_cost)
         if total_cost < optimal_cost
             optimal_cost = total_cost
             best = i
@@ -50,6 +53,7 @@ ops_vs_cap = plot(
     x = equip_costs,
     y = ops_costs,
     Geom.line,
+    Guide.Title("Figure 3: Relationship between\nOperation Costs and Capital Costs"),
     Guide.XLabel("Capital Costs (RMB)"),
     Guide.YLabel("Operating Costs (RMB)")
     )
