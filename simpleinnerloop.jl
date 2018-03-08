@@ -1,3 +1,8 @@
+# ERE 291 Project
+# Simple Inner Loop
+# Authors: Sam Schreiber, John Stayner, Yan-Ping Wang
+
+
 ####################################
 ######### Initialize tools #########
 ####################################
@@ -10,6 +15,8 @@ using Cbc
 using AmplNLWriter
 
 using Gadfly
+
+
 
 ###############################
 ######### Define Sets #########
@@ -55,6 +62,7 @@ PM25_MAX = 35
 CO2_MAX = 800
 PM25_0 = 0
 CO2_0 = AMB_CO2[1]
+
 
 ####################################
 ######### Initialize Model #########
