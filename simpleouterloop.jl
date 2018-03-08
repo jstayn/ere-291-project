@@ -48,8 +48,9 @@ println("Best AHU: ", best, "\n",
 
 ops_vs_cap = plot(
     x = equip_costs,
-    y = ops_costs,
+    y = ops_costs / 365,
     Geom.line,
+    Guide.Title("Figure 3: Relationship between\nOperation Costs and Capital Costs"),
     Guide.XLabel("Capital Costs (RMB)"),
     Guide.YLabel("Operating Costs (RMB)")
     )

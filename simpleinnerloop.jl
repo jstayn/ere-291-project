@@ -182,7 +182,10 @@ PM25_absorbed_plot =
         Guide.YLabel("PM2.5 Removed (µg)")
     )
 
-final = vstack(hstack(CMH_plot, CO2_plot), hstack(PM25_plot, PM25_absorbed_plot))
+final = vstack(
+    hstack(CMH_plot, CO2_plot),
+    hstack(PM25_plot, PM25_absorbed_plot)
+    )
 
-img = SVG("Debugging Plots.svg", 12inch, 12inch)
+img = PNG("Debugging Plots.png", 12inch, 12inch)
 draw(img, final)
