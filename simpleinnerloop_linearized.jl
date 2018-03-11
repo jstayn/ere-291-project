@@ -18,7 +18,7 @@ using Gadfly
 ###############################
 
 # Currently testing a period of one year (8760) hours
-T = 48
+T = 8760
 
 
 ###################################################
@@ -30,7 +30,7 @@ T = 48
 # Calculate rate of CO2 emissions from occupancy at time t [cm3 / hr]
 
 data = readcsv("Master-Data_v2.0.csv")
-AQdata = readcsv("AirQualityData20170301.csv")
+AQdata = readcsv("AirQualityData2016.csv")
 rooms = data[2:end,3]
 
 # CO2 concentration of outdoor air at time t [ppm]
