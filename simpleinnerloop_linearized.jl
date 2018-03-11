@@ -18,7 +18,7 @@ using Gadfly
 ###############################
 
 # Currently testing a period of one year (8760) hours
-T = 8760
+T = 48
 
 
 ###################################################
@@ -30,7 +30,7 @@ T = 8760
 # Calculate rate of CO2 emissions from occupancy at time t [cm3 / hr]
 
 data = readcsv("Master-Data_v2.0.csv")
-AQdata = readcsv("AirQualityData2016.csv")
+AQdata = readcsv("AirQualityData20170301.csv")
 rooms = data[2:end,3]
 
 # CO2 concentration of outdoor air at time t [ppm]
@@ -201,9 +201,9 @@ m = Model(solver = ClpSolver())
 @constraint(m, [t=2:T], HUMID[t] == HUMID[t-1] + (roomHumidSource[101][t%24 + 1] + kgMoistureFAUIn[t] - kgMoistureFAUOut[t] - kgMoistureRemoved[t])/(roomData[101][2] * airDensity))
 
 # set dummy initial condition to ambient concentrations
-@constraint(m, PM25[1] == PM25_0)
-@constraint(m, CO2[1] == CO2_0)
-@constraint(m, HUMID[1] == HUMID_0)
+# @constraint(m, PM25[1] == PM25_0)
+# @constraint(m, CO2[1] == CO2_0)
+# @constraint(m, HUMID[1] == HUMID_0)
 
 # CO2, PM2.5 and Humidity concentrations reset at the end of the cycle.  Is this really needed? - YP
 # @constraint(m, PM25[T+1] == PM25[1])
@@ -243,11 +243,15 @@ hmax = maximum(HUMIDAbsorbedresult)
 cost = getobjectivevalue(m)
 
 println("Total Cost [rmb]: ", cost)
+
 println("Total Dehumidification Costs [RMB]: ", sum(HUMIDAbsorbedresult) * ISMRE * Celec)
+println("Total Filter Costs [RMB]: ", Nfilter * Cfilter)
 println("Total Fan Power Costs [RMB]: ", sum(CMH) * 365 * P * Celec)
+
 println("Maximum Fan Load [cmh]: ", fmax)
 println("Maximum PM2.5 Load [ug]: ", pmax)
 println("Maximum Dehumidification Load [kg water]: ", hmax)
+
 println("Nfilter [num]: ", Nfilter)
 
 

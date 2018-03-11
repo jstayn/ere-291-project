@@ -18,7 +18,7 @@ using Gadfly
 ###############################
 
 # Currently testing a period of one year (8760) hours
-T = 24
+T = 168
 
 
 ###################################################
@@ -122,7 +122,7 @@ Cfilter = 50
 ######### Initialize Model #########
 ####################################
 
-m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=0", "ms_enable=1"]))
+m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"])) #, "ms_enable=1"]))
 #m = Model(solver = CbcSolver())
 
 ####################################
@@ -130,7 +130,7 @@ m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=0", "
 ####################################
 
 # rate of air intake at time t [m3 / hr]
-# @variable(m, CMH[1:T] >= 0, start=1) #need to change to absorption per room - YP
+@variable(m, CMH[1:T] >= 0, start=1) #need to change to absorption per room - YP
 
 # rate of PM2.5 absorption in room i at time t [ug / hr]
 @variable(m, roomPM25Absorption[1:T] >= 0, start=400)
@@ -156,7 +156,7 @@ m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=0", "
 @NLexpression(m, N, 1/k*sum(roomPM25Absorption[t] for t in 1:T)) #need to change to filters per room - YP
 
 # rate of incoming humidity from FAU at time t [kg / hr]
-@NLexpression(m, kgMoistureIncoming[t=1:T],  CMH[t] * airDensity * max((HUMID[t] - HUMID_MAX),0))
+@NLexpression(m, kgMoistureIncoming[t=1:T], CMH[t%24 + 1] * airDensity * AMB_HUMID[t])
 
 
 ######################################
@@ -181,7 +181,7 @@ m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=0", "
 
 # Humidity ratio in the room at time t is equal to the Humidity ratio  in the room at t-1 plus (the H2O mass introduced at t minus the H2O mass removed at t) divided by the room volume
 # The constraint is structured this way because the HVAC system can only react to humidity levels at time t, it cannot pre-emptively condition the air at t-1
-@NLconstraint(m, [t=2:T], HUMID[t] == HUMID[t-1] + (roomHumidSource[101][t%24 + 1] + kgMoistureIncoming[t] - kgMoistureRemoved[t])/roomData[101][2])
+@NLconstraint(m, [t=2:T], HUMID[t] == HUMID[t-1] + (roomHumidSource[101][t%24 + 1] + kgMoistureIncoming[t] - kgMoistureRemoved[t])/(roomData[101][2] * airDensity))
 
 # set dummy initial condition to ambient concentrations
 @constraint(m, PM25[1] == PM25_0)
