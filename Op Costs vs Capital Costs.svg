@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:gadfly="http://www.gadflyjl.org/ns"
+     version="1.2"
+     width="101.6mm" height="101.6mm" viewBox="0 0 101.6 101.6"
+     stroke="none"
+     fill="#000000"
+     stroke-width="0.3"
+     font-size="3.88"
+>
+<g stroke="#000000" stroke-opacity="0.000" fill="#222831" id="img-2ddbe977-1">
+  <rect x="0" y="0" width="101.6" height="101.6"/>
+</g>
+<g class="plotroot xscalable yscalable" id="img-2ddbe977-2">
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#A1A1A1" stroke="#000000" stroke-opacity="0.000" id="img-2ddbe977-3">
+    <text x="58.95" y="89.99" text-anchor="middle" dy="0.6em">Capital Costs (RMB)</text>
+  </g>
+  <g class="guide xlabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#A1A1A1" id="img-2ddbe977-4">
+    <text x="23.3" y="83.32" text-anchor="middle" dy="0.6em">0</text>
+    <text x="37.56" y="83.32" text-anchor="middle" dy="0.6em">1.0×10⁵</text>
+    <text x="51.82" y="83.32" text-anchor="middle" dy="0.6em">2.0×10⁵</text>
+    <text x="66.08" y="83.32" text-anchor="middle" dy="0.6em">3.0×10⁵</text>
+    <text x="80.34" y="83.32" text-anchor="middle" dy="0.6em">4.0×10⁵</text>
+    <text x="94.6" y="83.32" text-anchor="middle" dy="0.6em">5.0×10⁵</text>
+  </g>
+<g clip-path="url(#img-2ddbe977-5)">
+  <g id="img-2ddbe977-6">
+    <g pointer-events="visible" opacity="1" fill="#222831" stroke="#000000" stroke-opacity="0.000" class="guide background" id="img-2ddbe977-7">
+      <rect x="21.3" y="14.22" width="75.3" height="68.09"/>
+    </g>
+    <g class="guide ygridlines xfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#575757" id="img-2ddbe977-8">
+      <path fill="none" d="M21.3,80.31 L 96.6 80.31"/>
+      <path fill="none" d="M21.3,67.5 L 96.6 67.5"/>
+      <path fill="none" d="M21.3,54.68 L 96.6 54.68"/>
+      <path fill="none" d="M21.3,41.86 L 96.6 41.86"/>
+      <path fill="none" d="M21.3,29.04 L 96.6 29.04"/>
+      <path fill="none" d="M21.3,16.22 L 96.6 16.22"/>
+    </g>
+    <g class="guide xgridlines yfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#575757" id="img-2ddbe977-9">
+      <path fill="none" d="M23.3,14.22 L 23.3 82.32"/>
+      <path fill="none" d="M37.56,14.22 L 37.56 82.32"/>
+      <path fill="none" d="M51.82,14.22 L 51.82 82.32"/>
+      <path fill="none" d="M66.08,14.22 L 66.08 82.32"/>
+      <path fill="none" d="M80.34,14.22 L 80.34 82.32"/>
+      <path fill="none" d="M94.6,14.22 L 94.6 82.32"/>
+    </g>
+    <g class="plotpanel" id="img-2ddbe977-10">
+      <g stroke-width="0.3" fill="#000000" fill-opacity="0.000" class="geometry" stroke-dasharray="none" stroke="#FE4365" id="img-2ddbe977-11">
+        <path fill="none" d="M30.43,26.03 L 37.56 33.37 44.69 40.16 51.82 46.47 58.95 52.34 66.08 57.83 73.21 62.95 80.34 67.76 87.47 72.28 94.6 76.53"/>
+      </g>
+    </g>
+  </g>
+</g>
+  <g class="guide ylabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#A1A1A1" id="img-2ddbe977-12">
+    <text x="20.3" y="80.31" text-anchor="end" dy="0.35em">1250</text>
+    <text x="20.3" y="67.5" text-anchor="end" dy="0.35em">1300</text>
+    <text x="20.3" y="54.68" text-anchor="end" dy="0.35em">1350</text>
+    <text x="20.3" y="41.86" text-anchor="end" dy="0.35em">1400</text>
+    <text x="20.3" y="29.04" text-anchor="end" dy="0.35em">1450</text>
+    <text x="20.3" y="16.22" text-anchor="end" dy="0.35em">1500</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#A1A1A1" stroke="#000000" stroke-opacity="0.000" id="img-2ddbe977-13">
+    <text x="8.81" y="46.27" text-anchor="middle" dy="0.35em" transform="rotate(-90, 8.81, 48.27)">Operating Costs (RMB)</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#A1A1A1" stroke="#000000" stroke-opacity="0.000" id="img-2ddbe977-14">
+    <text x="58.95" y="5" text-anchor="middle" dy="0.6em">Figure 3: Relationship between<tspan x="58.95" dy="1.2em">Operation Costs and Capital Costs</tspan></text>
+  </g>
+</g>
+<defs>
+  <clipPath id="img-2ddbe977-5">
+  <path d="M21.3,14.22 L 96.6 14.22 96.6 82.32 21.3 82.32" />
+</clipPath>
+</defs>
+</svg>
