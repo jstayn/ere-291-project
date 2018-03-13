@@ -32,6 +32,7 @@ T = 8760
 data = readcsv("Master-Data_v2.0.csv")
 AQdata = readcsv("AirQualityData2016.csv")
 rooms = data[2:end,3]
+N = length(rooms)
 
 # CO2 concentration of outdoor air at time t [ppm]
 AMB_CO2 = AQdata[3:end,3]
@@ -57,17 +58,21 @@ qCO2 = 241 #cm3/kcal
 
 CO2pp = massPerson * met * qCO2 #cm3 CO2 / person-hr
 
+humidityPerPerson = 0.20 #[kg / person-hr]
+
 roomData = Dict{Int64,Array{Float64}}()
 roomOccupancy = Dict{Int64, Array{Int64}}() #number of People in each hour
 roomCO2Source = Dict{Int64, Array{Float64}}() #cm3 of CO2 Produced in each hour
 roomCO2Max = Dict{Int64, Float64}() #cm3 of CO2 Produced in each hour
-CMH = zeros(24)
+roomHumidSource = Dict{Int64, Array{Float64}}() #kg H20(g) per hour
+CMH = zeros(N,24)
 
-for i = 1:length(rooms)
+for i = 1:N
     roomData[rooms[i]] = data[i+1,4:6]
     roomOccupancy[rooms[i]] = data[i+1,7:30]
     roomCO2Source[rooms[i]] = CO2pp .* roomOccupancy[rooms[i]]
     roomCO2Max[rooms[i]] = maximum(roomCO2Source[rooms[i]])
+    roomHumidSource[rooms[i]] = humidityPerPerson .* roomOccupancy[rooms[i]]
 end
 
 # Set CMH during occupied hours based on the difference between the ppm generated and the max allowable ppm level
@@ -76,23 +81,10 @@ end
 ### SHOULD RETURN CMH PER ROOM FOR A SINGLE DAY ###
 ### REPLACE HARD-CODED CMH PARAMETER ###
 
-ACH = 5.15
-CMH = [0, 0, 0, 0, 0, 0, 0, 0, 0, roomData[101][2]*ACH, roomData[101][2]*ACH, roomData[101][2]*ACH, roomData[101][2]*ACH, roomData[101][2]*ACH,
-    roomData[101][2]*ACH, roomData[101][2]*ACH, roomData[101][2]*ACH, roomData[101][2]*ACH, roomData[101][2]*ACH, 0, 0, 0, 0, 0, 0]
-
-
-# Calculate rate of humidity generated from occupancy at time t [kg / hr]
-
-humidityPerPerson = 0.20 #[kg / hr]
-roomHumidSource = Dict{Int64, Array{Float64}}()
-
-for i = 1:length(rooms)
-    roomData[rooms[i]] = data[i+1,4:6]
-    roomOccupancy[rooms[i]] = data[i+1,7:30]
-    roomHumidSource[rooms[i]] = humidityPerPerson .* roomOccupancy[rooms[i]]
+CMHpp = 25.5 #CMH per person, US guideline of 15 cfm/person
+for i=1:N
+    CMH[i,:] = CMHpp .* roomOccupancy[rooms[i]]'
 end
-
-println(roomHumidSource[101])
 
 # initial indoor CO2 concentration at t = 0
 CO2_0 = AMB_CO2[1] #do we still need this? - YP
@@ -145,43 +137,44 @@ m = Model(solver = ClpSolver())
 ####################################
 
 # rate of air intake at time t [m3 / hr]
-# @variable(m, CMH[1:T] >= 0, start=1) #need to change to absorption per room - YP
+# @variable(m, CMH[1:N, 1:T] >= 0, start=1)
+# Using parameters based on 15cmf/person/room to linearize the problem
 
 # rate of PM2.5 absorption in room i at time t [ug / hr]
-@variable(m, roomPM25Absorption[1:T] >= 0)
+@variable(m, roomPM25Absorption[1:N, 1:T] >= 0)
 
 # rate of humidity removal at time t [kg / hr]
-@variable(m, kgMoistureRemoved[1:T] >= 0)
+@variable(m, kgMoistureRemoved[1:N, 1:T] >= 0)
 
 # CO2 concentration in room i at time t [m3 / ug]
-@variable(m, CO2[1:T] >= 0) #need to change to CO2concentration per room - YP
+@variable(m, CO2[1:N, 1:T] >= 0)
 
 # PM2.5 concentration in room i at time t [ppm]
-@variable(m, PM25[1:T] >= 0) #need to change to PM2.5 concentration per room - YP
+@variable(m, PM25[1:N, 1:T] >= 0)
 
 # humidity ratio of indoor air at time t [gm water / gm of dry air]
-@variable(m, HUMID[1:T] >= 0) #need to change to PM2.5 concentration per room - YP
+@variable(m, HUMID[1:N, 1:T] >= 0)
 
 
 #####################################
 ######## Dependent variables ########
 #####################################
 
-# number of PM2.5 filters required for room i at time t [kg / hr]
-@expression(m, N, 1/k*sum(roomPM25Absorption[t] for t in 1:T)) #need to change to filters per room - YP
+# number of PM2.5 filters required for all rooms
+@expression(m, numFilters, 1/k*sum(roomPM25Absorption))
 
 # rate of incoming humidity from FAU at time t [kg / hr]
-@expression(m, kgMoistureFAUIn[t=1:T], CMH[t%24 + 1] * airDensity * AMB_HUMID[t])
+@expression(m, kgMoistureFAUIn[i=1:N, t=1:T], CMH[i, (t-1)%24 + 1] * airDensity * AMB_HUMID[t])
 
 # rate of outgoing humidity from FAU at time t [kg / hr]
-@expression(m, kgMoistureFAUOut[t=1:T], CMH[t%24 + 1] * airDensity * HUMID[t])
+@expression(m, kgMoistureFAUOut[i=1:N, t=1:T], CMH[i, (t-1)%24 + 1] * airDensity * HUMID[t])
 
 ######################################
 ######## Objective Functions #########
 ######################################
 
 # Minimize the total cost, equal to the sum of the cost of fan electricity over the operational period, plus the cost of PM2.5 filter replacements
-@objective(m, Min, Celec*sum(CMH[t%24 + 1]*P + kgMoistureRemoved[t]*ISMRE for t in 1:T) + Cfilter*N)
+@objective(m, Min, Celec*(P*sum(CMH) + ISMRE*sum(kgMoistureRemoved)) + Cfilter*numFilters)
 
 
 ######################################
@@ -191,33 +184,33 @@ m = Model(solver = ClpSolver())
 # CO2 concentration in the room at time t is equal to the CO2 concentration in the room at t-1 plus (the CO2 mass introduced at t minus the CO2 mass removed at t) divided by the room volume
 # The constraint is structured this way because the HVAC system can only react to CO2 levels at time t, it cannot pre-emptively condition the air at t-1
 # What if we just assumed an air change rate based on the maximum CO2
-@constraint(m, [t=2:T], CO2[t] == CO2[t-1] + (roomCO2Source[101][t%24 + 1] + CMH[t%24 + 1]*AMB_CO2[t] - CMH[t%24 + 1]*CO2[t])/roomData[101][2])
+@constraint(m, [i=1:N, t=2:T], CO2[i,t] == CO2[i,t-1] + (roomCO2Source[rooms[i]][(t-1)%24 + 1] + CMH[i,(t-1)%24 + 1]*(AMB_CO2[t] - CO2[i,t])/roomData[rooms[i]][2]))
 
 # PM2.5 concentration in the room at time t is equal to the PM 2.5 in the room at t-1 plus the mass of PM2.5 introduced at time t minus the mass filtered at time t divided by the room volume
-@constraint(m, [t=2:T], PM25[t] == PM25[t-1] + (CMH[t%24 + 1]*AMB_PM2_5[t] - CMH[t%24 + 1]*PM25[t] - roomPM25Absorption[t])/roomData[101][2])
+@constraint(m, [i=1:N, t=2:T], PM25[t] == PM25[t-1] + (CMH[i, (t-1)%24 + 1]*(AMB_PM2_5[t] - PM25[t]) - roomPM25Absorption[i,t])/roomData[rooms[i]][2])
 
 # Humidity ratio in the room at time t is equal to the Humidity ratio  in the room at t-1 plus (the H2O mass introduced at t minus the H2O mass removed at t) divided by the room volume
 # The constraint is structured this way because the HVAC system can only react to humidity levels at time t, it cannot pre-emptively condition the air at t-1
-@constraint(m, [t=2:T], HUMID[t] == HUMID[t-1] + (roomHumidSource[101][t%24 + 1] + kgMoistureFAUIn[t] - kgMoistureFAUOut[t] - kgMoistureRemoved[t])/(roomData[101][2] * airDensity))
+@constraint(m, [i=1:N, t=2:T], HUMID[t] == HUMID[t-1] + (roomHumidSource[rooms[i]][(t-1)%24 + 1] + kgMoistureFAUIn[i,t] - kgMoistureFAUOut[i,t] - kgMoistureRemoved[i,t])/(roomData[rooms[i]][2] * airDensity))
 
-# set dummy initial condition to ambient concentrations
-# @constraint(m, PM25[1] == PM25_0)
-# @constraint(m, CO2[1] == CO2_0)
-# @constraint(m, HUMID[1] == HUMID_0)
-
-# CO2, PM2.5 and Humidity concentrations reset at the end of the cycle.  Is this really needed? - YP
-# @constraint(m, PM25[T+1] == PM25[1])
-# @constraint(m, CO2[T+1] == CO2[1])
-# @constraint(m, HUMID[T+1] == HUMID[1])
+# set  initial condition to ambient concentrations
+# @constraint(m, [i=1:N], PM25[i,1] == PM25_0)
+# @constraint(m, [i=1:N], CO2[i,1] == CO2_0)
+# @constraint(m, [i=1:N], HUMID[i,1] == HUMID_0)
+#
+# # CO2, PM2.5 and Humidity concentrations reset at the end of the cycle.
+# @constraint(m, [i=1:N], PM25[i,T] == PM25[i,1])
+# @constraint(m, [i=1:N], CO2[i,T] == CO2[i,1])
+# @constraint(m, [i=1:N], HUMID[i,T] == HUMID[i,1])
 
 # maximum allowable indoor CO2 concentration [ppm].  Constraints do not apply to first timestep, since conditioning has not yet been applied.
-@constraint(m, [t=2:T], CO2[t] <= CO2_MAX)
+@constraint(m, [i=1:N, t=2:T], CO2[i,t] <= CO2_MAX)
 
 # maximum allowable indoor PM2.5 concentration [ug/m3].  Constraints do not apply to first timestep, since conditioning has not yet been applied.
-@constraint(m, [t=2:T], PM25[t] <= PM25_MAX)
+@constraint(m, [i=1:N, t=2:T], PM25[i,t] <= PM25_MAX)
 
 # maximum allowable indoor humidity ratio [gm water / gm of Dry Air].  Constraints do not apply to first timestep, since conditioning has not yet been applied.
-@constraint(m, [t=2:T], HUMID[t] <= HUMID_MAX)
+@constraint(m, [i=1:N, t=2:T], HUMID[i,t] <= HUMID_MAX)
 
 ######################################
 ########### Print and solve ##########
@@ -230,11 +223,12 @@ CO2result = getvalue(CO2)
 PM25result = getvalue(PM25)
 HUMIDresult = getvalue(HUMID)
 
-CMHresult = CMH
-Nfilter = getvalue(N)
-EnergyCost = getvalue(N)
-PM25Absorbedresult = getvalue(roomPM25Absorption)
-HUMIDAbsorbedresult = getvalue(kgMoistureRemoved)
+Nfilter = getvalue(numFilters)
+
+
+PM25Absorbedresult = sum(getvalue(roomPM25Absorption),1)
+HUMIDAbsorbedresult = sum(getvalue(kgMoistureRemoved),1)
+CMHresult = sum(CMH,1)
 
 fmax = maximum(CMHresult)
 pmax = maximum(PM25Absorbedresult)
@@ -261,56 +255,56 @@ println("Nfilter [num]: ", Nfilter)
 * vstack command in the REPL. That will make it open in your browser!
 =#
 
-CMH_plot =
-    plot(
-        x = 1:length(CMHresult),
-        y = CMHresult,
-        Geom.line,
-        Guide.Title("CMH at timestep x")
-    )
-
-CO2_plot =
-    plot(
-        x = 0:length(CO2result) - 1,
-        y = CO2result,
-        Geom.line,
-        Guide.Title("CO2 Concentration inside room (ppm)")
-    )
-
-PM25_plot =
-    plot(
-        x = 0:length(PM25result) - 1,
-        y = PM25result,
-        Geom.line,
-        Guide.Title("PM2.5 Concentration (µg)")
-    )
-
-PM25_absorbed_plot =
-    plot(
-        x = 1:length(PM25Absorbedresult),
-        y = PM25Absorbedresult,
-        Geom.line,
-        Guide.Title("PM2.5 Removed by Filters")
-    )
-
-HUMID_plot =
-    plot(
-        x = 0:length(HUMIDresult) - 1,
-        y = HUMIDresult,
-        Geom.line,
-        Guide.Title("Humidity Ratio (kg Water / kg dry air)")
-    )
-
-HUMID_absorbed_plot =
-    plot(
-        x = 1:length(HUMIDAbsorbedresult),
-        y = HUMIDAbsorbedresult,
-        Geom.line,
-        Guide.Title("Moisture Removed by Dehumidification")
-    )
-
-
-final = vstack(hstack(CMH_plot, CO2_plot), hstack(PM25_plot, PM25_absorbed_plot), hstack(HUMID_plot, HUMID_absorbed_plot))
-
-img = SVG("Debugging Plots.svg", 12inch, 12inch)
-draw(img, final)
+# CMH_plot =
+#     plot(
+#         x = 1:length(CMHresult),
+#         y = CMHresult,
+#         Geom.line,
+#         Guide.Title("CMH at timestep x")
+#     )
+#
+# CO2_plot =
+#     plot(
+#         x = 0:length(CO2result) - 1,
+#         y = CO2result,
+#         Geom.line,
+#         Guide.Title("CO2 Concentration inside room (ppm)")
+#     )
+#
+# PM25_plot =
+#     plot(
+#         x = 0:length(PM25result) - 1,
+#         y = PM25result,
+#         Geom.line,
+#         Guide.Title("PM2.5 Concentration (µg)")
+#     )
+#
+# PM25_absorbed_plot =
+#     plot(
+#         x = 1:length(PM25Absorbedresult),
+#         y = PM25Absorbedresult,
+#         Geom.line,
+#         Guide.Title("PM2.5 Removed by Filters")
+#     )
+#
+# HUMID_plot =
+#     plot(
+#         x = 0:length(HUMIDresult) - 1,
+#         y = HUMIDresult,
+#         Geom.line,
+#         Guide.Title("Humidity Ratio (kg Water / kg dry air)")
+#     )
+#
+# HUMID_absorbed_plot =
+#     plot(
+#         x = 1:length(HUMIDAbsorbedresult),
+#         y = HUMIDAbsorbedresult,
+#         Geom.line,
+#         Guide.Title("Moisture Removed by Dehumidification")
+#     )
+#
+#
+# final = vstack(hstack(CMH_plot, CO2_plot), hstack(PM25_plot, PM25_absorbed_plot), hstack(HUMID_plot, HUMID_absorbed_plot))
+#
+# img = SVG("Debugging Plots.svg", 12inch, 12inch)
+# draw(img, final)
