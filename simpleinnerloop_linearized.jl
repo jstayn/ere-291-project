@@ -18,7 +18,7 @@ using Gadfly
 ###############################
 
 # Currently testing a period of one year (8760) hours
-T = 24
+T = 8760
 
 
 ###################################################
@@ -70,7 +70,6 @@ for i = 1:N
     roomData[rooms[i]] = data[i+1,4:6]
     roomOccupancy[rooms[i]] = data[i+1,7:30]
     roomCO2Source[rooms[i]] = CO2pp .* roomOccupancy[rooms[i]]
-    roomCO2Max[rooms[i]] = maximum(roomCO2Source[rooms[i]])
     roomHumidSource[rooms[i]] = humidityPerPerson .* roomOccupancy[rooms[i]]
 end
 
@@ -100,7 +99,7 @@ airDensity = 1.225
 ### Equipment Parameters ###
 
 # max intake capacity of FAU model i [m3 air / hr]
-x = 2000 #dummy varaible - need to merge with John's design loop - YP
+x = 2000 #dummy variable - need to merge with John's design loop - YP
 
 # efficiency of the fan of FAU model i [kWh / m3 air]
 P = .00045
@@ -186,7 +185,7 @@ m = Model(solver = ClpSolver())
 
 # Humidity ratio in the room at time t is equal to the Humidity ratio  in the room at t-1 plus (the H2O mass introduced at t minus the H2O mass removed at t) divided by the room volume
 # The constraint is structured this way because the HVAC system can only react to humidity levels at time t, it cannot pre-emptively condition the air at t-1
-@constraint(m, [i=1:N, t=2:T], HUMID[t] == HUMID[t-1] + (roomHumidSource[rooms[i]][(t-1)%24 + 1] + kgMoistureFAUIn[i,t] - kgMoistureFAUOut[i,t] - kgMoistureRemoved[i,t])/(roomData[rooms[i]][2] * airDensity))
+@constraint(m, [i=1:N, t=2:T], HUMID[i,t] == HUMID[i,t-1] + (roomHumidSource[rooms[i]][(t-1)%24 + 1] + kgMoistureFAUIn[i,t] / N - kgMoistureFAUOut[i,t] / N - kgMoistureRemoved[i,t])/(roomData[rooms[i]][2] * airDensity))
 
 # set  initial condition to ambient concentrations
 @constraint(m, [i=1:N], PM25[i,1] == PM25_0)
