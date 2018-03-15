@@ -129,8 +129,6 @@ end
 
 function one_day(P)
 
-    PATH_TO_SOLVERS = ENV["ERE291_SOLVERS"]
-
     T = 24 # Hours
 
     ###################################################
@@ -236,7 +234,8 @@ function one_day(P)
 
 end
 
-CMH = one_day(0.4)
+#CMH = one_day(0.4)
 
-plot(x = 1:24, y = CMHresult, Geom.line)
-plot(x = 1:24, y = sum(values(roomCO2Source), 1), Geom.line)
+#plot(x = 1:24, y = CMHresult, Geom.line)
+#plot(x = 1:24, y = sum(values(roomCO2Source), 1), Geom.line)
+end

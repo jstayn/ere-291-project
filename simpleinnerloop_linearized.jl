@@ -9,7 +9,7 @@ using Clp
 using Cbc
 using AmplNLWriter
 
-using DataFrames
+using .inner_loop # Run small_NLP_inner_loop to load this module
 using Gadfly
 
 
