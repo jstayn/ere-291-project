@@ -42,7 +42,7 @@ AMB_PM2_5 = AQdata[3:end,2]
 AMB_HUMID = AQdata[3:end,4]
 
 # maximum allowable indoor CO2 concentration [ppm]
-CO2_MAX = 800
+CO2_MAX = 1000
 
 # maximum allowable indoor PM2.5 concentration [ug/m3]
 PM25_MAX = 35
@@ -57,7 +57,7 @@ qCO2 = 241 #cm3/kcal
 
 CO2pp = massPerson * met * qCO2 #cm3 CO2 / person-hr
 
-humidityPerPerson = 0.20 #[kg / person-hr]
+humidityPerPerson = 0.15 #[kg / person-hr]
 
 roomData = Dict{Int64,Array{Float64}}()
 roomOccupancy = Dict{Int64, Array{Int64}}() #number of People in each hour
@@ -74,8 +74,11 @@ for i = 1:N
 end
 
 
+
 #= # This is done in the Dependent Parameters section now
 CMHpp = 80 #CMH per person, US guideline of 15 cfm/person
+#CMHpp = 55 #CMH per person, US guideline of 15 cfm/person
+
 for i = 1:N
     CMH[i,:] = CMHpp .* roomOccupancy[rooms[i]]
 end
@@ -161,14 +164,14 @@ m = Model(solver = ClpSolver())
 @expression(m, kgMoistureFAUIn[i=1:N, t=1:T], CMH[i, (t-1)%24 + 1] * airDensity * AMB_HUMID[t])
 
 # rate of outgoing humidity from FAU at time t [kg / hr]
-@expression(m, kgMoistureFAUOut[i=1:N, t=1:T], CMH[i, (t-1)%24 + 1] * airDensity * HUMID[t])
+@expression(m, kgMoistureFAUOut[i=1:N, t=1:T], CMH[i, (t-1)%24 + 1] * airDensity * HUMID[i,t])
 
 ######################################
 ######## Objective Functions #########
 ######################################
 
 # Minimize the total cost, equal to the sum of the cost of fan electricity over the operational period, plus the cost of PM2.5 filter replacements
-@objective(m, Min, Celec*(P*sum(CMH) + ISMRE*sum(kgMoistureRemoved)) + Cfilter*numFilters)
+@objective(m, Min, Celec*(P*sum(CMH)*T/24 + ISMRE*sum(kgMoistureRemoved)) + Cfilter*numFilters)
 
 
 ######################################
@@ -185,7 +188,7 @@ m = Model(solver = ClpSolver())
 
 # Humidity ratio in the room at time t is equal to the Humidity ratio  in the room at t-1 plus (the H2O mass introduced at t minus the H2O mass removed at t) divided by the room volume
 # The constraint is structured this way because the HVAC system can only react to humidity levels at time t, it cannot pre-emptively condition the air at t-1
-@constraint(m, [i=1:N, t=2:T], HUMID[i,t] == HUMID[i,t-1] + (roomHumidSource[rooms[i]][(t-1)%24 + 1] + kgMoistureFAUIn[i,t] / N - kgMoistureFAUOut[i,t] / N - kgMoistureRemoved[i,t])/(roomData[rooms[i]][2] * airDensity))
+@constraint(m, [i=1:N, t=2:T], HUMID[i,t] == HUMID[i,t-1] + (roomHumidSource[rooms[i]][(t-1)%24 + 1] + kgMoistureFAUIn[i,t] - kgMoistureFAUOut[i,t] - kgMoistureRemoved[i,t])/(roomData[rooms[i]][2] * airDensity))
 
 # set  initial condition to ambient concentrations
 @constraint(m, [i=1:N], PM25[i,1] == PM25_0)
@@ -234,7 +237,7 @@ println("Total Cost [rmb]: ", cost)
 
 println("Total Dehumidification Costs [RMB]: ", sum(HUMIDAbsorbedresult) * ISMRE * Celec)
 println("Total Filter Costs [RMB]: ", Nfilter * Cfilter)
-println("Total Fan Power Costs [RMB]: ", sum(CMH) * P * Celec)
+println("Total Fan Power Costs [RMB]: ", sum(CMH)*T/24 * P * Celec)
 
 println("Maximum Fan Load [cmh]: ", fmax)
 println("Maximum PM2.5 Load [ug]: ", pmax)
