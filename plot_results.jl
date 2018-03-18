@@ -57,21 +57,37 @@ println("Best AHU: ", best, "\n",
 
 
 
-# Gadfly plotting
+function cap_costs_scale(x)
+    scale_factor = 1000
+    "\$$(x / scale_factor)"
+end
+
+function NPV_scale(y)
+    scale_factor = 100
+    "\$$(y / scale_factor)"
+end
+
+
+light_theme = Theme(
+    background_color = "white",
+    panel_fill = "white",
+    default_color = "blue"
+    )
+
 ops_vs_cap = plot(
     x = equip_costs,
-    y = NPV,
-    Geom.line,
+    y = ops_costs,
+    Geom.point,
     Guide.Title("Figure 3: Relationship between\nOperation Costs and Capital Costs"),
-    Guide.XLabel("Capital Costs (RMB)"),
+    Guide.XLabel("Capital Costs (Thousands of RMB)"),
     Guide.YLabel("Operating Costs (RMB)"),
-    Theme("minimal")
+    Scale.x_continuous(labels = cap_costs_scale),
+    Scale.y_continuous(labels = NPV_scale),
+    light_theme
     )
 
 img = SVG("Op Costs vs Capital Costs.svg", 4inch, 4inch)
 draw(img, ops_vs_cap)
-
-
 
 
 #=
