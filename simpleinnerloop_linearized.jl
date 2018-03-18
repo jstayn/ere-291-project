@@ -102,9 +102,6 @@ airDensity = 1.225
 
 ### Equipment Parameters ###
 
-# max intake capacity of FAU model i [m3 air / hr]
-x = 2000 #dummy variable - need to merge with John's design loop - YP
-
 # efficiency of the fan of FAU model i [kWh / m3 air]
 P = .00045
 
@@ -126,9 +123,6 @@ Celec = 1.4
 Cfilter = 50
 
 ######## Dependent parameters ########
-
-# Set CMH during occupied hours based on the difference between the ppm generated and the max allowable ppm level
-CMH = one_day(P)
 
 ####################################
 ######### Initialize Model #########
