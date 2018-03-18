@@ -211,7 +211,7 @@ m = Model(solver = ClpSolver())
 ########### Print and solve ##########
 ######################################
 
-#print(m)
+#print(m)##
 solve(m)
 
 CO2result = sum(getvalue(CO2),1)
