@@ -64,7 +64,8 @@ ops_vs_cap = plot(
     Geom.line,
     Guide.Title("Figure 3: Relationship between\nOperation Costs and Capital Costs"),
     Guide.XLabel("Capital Costs (RMB)"),
-    Guide.YLabel("Operating Costs (RMB)")
+    Guide.YLabel("Operating Costs (RMB)"),
+    Theme("minimal")
     )
 
 img = SVG("Op Costs vs Capital Costs.svg", 4inch, 4inch)
