@@ -83,7 +83,7 @@ function OpsOptLP(T, P, capacity, ISMRE, damperPlacement)
         CMHOrig[i,:] = CMHpp .* roomOccupancy[rooms[i]]
     end
 
-    CMHOptResult = CMH_opt(T_repeat, N, damperPlacement)
+    CMHOptResult, fmax, NLPstatus = CMH_opt(T_repeat, N, P, damperPlacement)
 
     CMH = zeros(N,T)
 
@@ -107,11 +107,18 @@ function OpsOptLP(T, P, capacity, ISMRE, damperPlacement)
 
     ### Equipment Parameters ###
 
-    # max intake capacity of FAU model i [m3 air / hr]
-    x = 2000 #dummy variable - need to merge with John's design loop - YP
-
     # PM2.5 absorption capacity per filter before replacement [ug/filter]
     k = 10^7
+
+    # pressure drop through ducts [Pa]
+    pressureDropDucts = 103
+
+    # pressure drop through 1x HEPA filter [{Pa]
+    pressureDropHEPAFilter = 250
+
+    # pressure drop total [Pa]
+    pressureDropSystem = pressureDropDucts + pressureDropHEPAFilter
+
 
     ### Cost Parameters ###
 
@@ -167,7 +174,7 @@ function OpsOptLP(T, P, capacity, ISMRE, damperPlacement)
     ######################################
 
     # Minimize the total cost, equal to the sum of the cost of fan electricity over the operational period, plus the cost of PM2.5 filter replacements
-    @objective(m, Min, Celec*(P*sum(CMH)*T/24 + ISMRE*sum(kgMoistureRemoved)) + Cfilter*numFilters)
+    @objective(m, Min, Celec*((P + pressureDropSystem / 3600 / 1000)*sum(CMH)*T/24 + ISMRE*sum(kgMoistureRemoved)) + Cfilter*numFilters)
 
 
     ######################################
@@ -221,9 +228,7 @@ function OpsOptLP(T, P, capacity, ISMRE, damperPlacement)
 
     PM25Absorbedresult = sum(getvalue(roomPM25Absorption),1)
     HUMIDAbsorbedresult = sum(getvalue(kgMoistureRemoved),1)
-    CMHresult = sum(CMH,1)
 
-    fmax = maximum(CMHresult)
     pmax = maximum(PM25Absorbedresult)
     hmax = maximum(HUMIDAbsorbedresult)
 
@@ -239,7 +244,7 @@ function OpsOptLP(T, P, capacity, ISMRE, damperPlacement)
     println("Maximum PM2.5 Load [ug]: ", pmax)
     println("Maximum Dehumidification Load [kg water]: ", hmax)
 
-    return fmax <= capacity, cost
+    return fmax <= capacity, cost, fmax, pmax, hmax, NLPstatus
 
 end
 

@@ -8,9 +8,7 @@
 using inner_loop
 using Gadfly
 
-
 T = 8760
-capacity = 10000
 
 equip_data = readcsv("Equipment_Costs.csv")[2:end,:]
 damper_data = readcsv("Damper_Data.csv")[2:end,:]
@@ -21,17 +19,24 @@ equip_efficiency = equip_data[:, 4]
 ISMRE = equip_data[:, 5]
 
 damper_placement = damper_data[:, 2]
-damper_costs = damper_data[:, 3]
+damper_cost = 5000
 
 optimal_cost = Inf
 best = 0
 
 capexResults = []
-NPVResults = []
-nYears = 20
-discountRate = 0.06
-
+opexResults = []
+NPCResults = []
 feasibilityResults = []
+
+fmaxResults = []
+pmaxResults = []
+hmaxResults = []
+
+NLPstatusResults = []
+
+nYears = 20
+discountRate = 0.05
 
 DO1 = [1,1,1,1,1,1,1,1,1,1,1,1]
 DO2 = [0,1,1,1,1,1,1,1,1,1,1,1]
@@ -56,46 +61,51 @@ damperPlacementOptions = [DO1, DO2, DO3, DO4, DO5, DO6, DO7, DO8, DO9, DO10, DO1
 
 for i = 1:size(equip_data)[1]
 
-    for j = 1:13
+    for j = 1:length(damperPlacementOptions)
 
-        feasibility, ops_cost = OpsOptLP(T, equip_efficiency[i],
+        feasibility, opex, fmax, pmax, hmax, NLPstatus = OpsOptLP(T, equip_efficiency[i],
                                                         equip_capacity[i], ISMRE[i], damperPlacementOptions[j])
-        capex = equip_costs[i] + sum(damper_costs * damperPlacementOptions[j][k] for k = 1:12)
+        capex = equip_costs[i] + sum(damper_cost * (1 - damperPlacementOptions[j][k]) for k = 1:length(damperPlacementOptions[j]))
+        NPC = capex + sum(opex/(1+discountRate)^p for p=1:nYears)
+
         push!(capexResults, capex)
-
-        NPV = capex + sum(ops_cost/(1+discountRate)^p for p=1:nYears)
-        push!(NPVResults, NPV)
-
+        push!(opexResults, opex)
+        push!(NPCResults, NPC)
         push!(feasibilityResults, feasibility)
 
-        if feasibility
-            if total_cost < optimal_cost
-                optimal_cost = total_cost
-                best = i
-            end
-        end
+        push!(fmaxResults, fmax)
+        push!(pmaxResults, pmax)
+        push!(hmaxResults, hmax)
+
+        push!(NLPstatusResults, NLPstatus)
+
+        println("AHU Number ", i, " and damper Option ", j, " Results:")
+        println("Capex: ", capex)
+        println("Opex: ", opex)
+        println("NPC: ", NPC)
+        println("Feasibility: ", feasibility)
     end
 end
 
-if best == 0
-    best = "Infeasible"
-end
-
-println("Best AHU: ", best, "\n",
-        "Optimal Cost: ", optimal_cost)
-
 writecsv("capex.csv", capexResults)
-writecsv("NPV.csv", NPVResults)
+writecsv("opex.csv", opexResults)
+writecsv("NPC.csv", NPCResults)
 writecsv("feasibility.csv", feasibilityResults)
+writecsv("fmax.csv", fmaxResults)
+writecsv("pmax.csv", pmaxResults)
+writecsv("hmax.csv", hmaxResults)
+#writecsv("NLPStatus.csv", NLPstatusResults)
 
-ops_vs_cap = plot(
-    x = capex,
-    y = NPVResults,
-    Geom.point,
-    Guide.Title("Figure 3: Relationship between\nNPV and Capital Costs"),
-    Guide.XLabel("Capital Costs (RMB)"),
-    Guide.YLabel("NPV (RMB)")
-    )
+println("NLPStatus: ", NLPstatusResults)
 
-img = SVG("NPV vs Capital Costs.svg", 4inch, 4inch)
-draw(img, NPV_vs_cap)
+#ops_vs_cap = plot(
+    #x = capexResults,
+    #y = NPCResults,
+    #Geom.point,
+    #Guide.Title("Figure 3: Relationship between\nNPC and Capital Costs"),
+    #Guide.XLabel("Capital Costs (RMB)"),
+    #Guide.YLabel("NPC (RMB)")
+    #)
+
+#img = SVG("NPC vs Capital Costs.svg", 4inch, 4inch)
+#draw(img, NPC_vs_cap)

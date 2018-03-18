@@ -17,13 +17,25 @@ using NLP_loop
 ###############################
 
 # Currently testing a period of one year (8760) hours
-T = 24
+T = 8760
 T_repeat = 24
 
 data = readcsv("Room-Data_v3.0.csv")
 AQdata = readcsv("AirQualityData2016.csv")
 rooms = data[2:end,3]
 N = length(rooms)
+
+### Equipment Variables ###
+
+# max intake capacity of FAU model i [m3 air / hr]
+x = 2000 #dummy variable - need to merge with John's design loop - YP
+
+# efficiency of the fan of FAU model i [kWh / m3 air]
+P = .00045
+
+# minimum integrated seasonal moisture removal efficiency (ISMRE) [kWh/kg]
+ISMRE = 0.5
+
 
 ###################################################
 ############ Define parameters and data ###########
@@ -102,20 +114,21 @@ airDensity = 1.225
 
 ### Equipment Parameters ###
 
-# max intake capacity of FAU model i [m3 air / hr]
-x = 2000 #dummy variable - need to merge with John's design loop - YP
-
-# efficiency of the fan of FAU model i [kWh / m3 air]
-P = .00045
-
 # PM2.5 absorption capacity per filter before replacement [ug/filter]
 k = 10^7
 
-# minimum integrated seasonal moisture removal efficiency (ISMRE) [kWh/kg]
-ISMRE = 0.5
-
 # efficiency of PM2.5 filter
 R = 0.8 #do we still need this? - YP
+
+# pressure drop through ducts [Pa]
+pressureDropDucts = 103
+
+# pressure drop through 1x HEPA filter [{Pa]
+pressureDropHEPAFilter = 250
+
+# pressure drop total [Pa]
+pressureDropSystem = pressureDropDucts + pressureDropHEPAFilter
+
 
 ### Cost Parameters ###
 
@@ -171,7 +184,7 @@ m = Model(solver = ClpSolver())
 ######################################
 
 # Minimize the total cost, equal to the sum of the cost of fan electricity over the operational period, plus the cost of PM2.5 filter replacements
-@objective(m, Min, Celec*(P*sum(CMH)*T/24 + ISMRE*sum(kgMoistureRemoved)) + Cfilter*numFilters)
+@objective(m, Min, Celec*((P + pressureDropSystem / 3600 / 1000)*sum(CMH)*T/24 + ISMRE*sum(kgMoistureRemoved)) + Cfilter*numFilters)
 
 
 ######################################
