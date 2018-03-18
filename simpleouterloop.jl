@@ -5,10 +5,8 @@
 
 
 # Simple outer loop
-using inner_loop_john
-# using Gadfly
-using PyPlot
-
+using inner_loop
+using Gadfly
 
 
 T = 24
@@ -51,19 +49,20 @@ end
 println("Best AHU: ", best, "\n",
         "Optimal Cost: ", optimal_cost)
 
-#= # Gadfly plotting
+
+function cap_costs_scale(x)
+    "\$$(x / 1000)"
+end
+
 ops_vs_cap = plot(
     x = equip_costs,
     y = ops_costs,
     Geom.line,
     Guide.Title("Figure 3: Relationship between\nOperation Costs and Capital Costs"),
     Guide.XLabel("Capital Costs (RMB)"),
-    Guide.YLabel("Operating Costs (RMB)")
+    Guide.YLabel("Operating Costs (RMB)"),
+    Scale.x_continuous(labels = cap_costs_scale)
     )
 
 img = SVG("Op Costs vs Capital Costs.svg", 4inch, 4inch)
 draw(img, ops_vs_cap)
-=#
-
-plot(equip_costs, ops_costs)
-title("Plots of Costs")

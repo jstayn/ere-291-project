@@ -8,10 +8,7 @@ using JuMP
 using Clp
 using Cbc
 using AmplNLWriter
-
-using DataFrames
 using Gadfly
-
 
 ###############################
 ######### Define Sets #########
@@ -27,10 +24,10 @@ T = 24
 
 ### Air Quality Parameters ###
 
-data = readcsv("Master-Data_v2.0.csv")
+data = readcsv("Room-Data_v3.0.csv")
 AQdata = readcsv("AirQualityData2016.csv")
 rooms = data[2:end,3]
-N = 1 #length(rooms)
+N = length(rooms)
 
 # CO2 concentration of outdoor air at time t [ppm]
 AMB_CO2 = AQdata[3:end,3]
@@ -64,29 +61,20 @@ roomOccupancy = Dict{Int64, Array{Int64}}() #number of People in each hour
 roomCO2Source = Dict{Int64, Array{Float64}}() #cm3 of CO2 Produced in each hour
 roomCO2Max = Dict{Int64, Float64}() #cm3 of CO2 Produced in each hour
 roomHumidSource = Dict{Int64, Array{Float64}}() #kg H20 produced per hour
-CMH = zeros(N,24)
 
 for i = 1:N
-    roomData[rooms[i]] = data[i+1,4:6]
-    roomOccupancy[rooms[i]] = data[i+1,7:30]
+    roomData[rooms[i]] = data[i+1,4:7]
+    roomOccupancy[rooms[i]] = data[i+1,8:31]
     roomCO2Source[rooms[i]] = CO2pp .* roomOccupancy[rooms[i]]
     roomHumidSource[rooms[i]] = humidityPerPerson .* roomOccupancy[rooms[i]]
 end
 
-# Set CMH during occupied hours based on the difference between the ppm generated and the max allowable ppm level
-
-### INSERT FUNCTION CALL TO 24-HOUR NONLINEAR CMH SOLVER HERE ###
-### SHOULD RETURN CMH PER ROOM FOR A SINGLE DAY ###
-### REPLACE HARD-CODED CMH PARAMETER ###
-
-CMHpp = 55 #CMH per person, US guideline of 15 cfm/person
-
-for i = 1:N
-    CMH[i,:] = CMHpp .* roomOccupancy[rooms[i]]
-end
+# Number of air diffusers per room
+diffusers = data[2:end, 7]
+numDiffusers = sum(diffusers)
 
 # initial indoor CO2 concentration at t = 0
-CO2_0 = AMB_CO2[1]
+CO2_0 = CO2_MAX
 
 # initial indoor PM2.5 concentration at t = 0
 PM25_0 = AMB_PM2_5[1]
@@ -98,9 +86,6 @@ HUMID_0 = AMB_HUMID[1]
 airDensity = 1.225
 
 ### Equipment Parameters ###
-
-# max intake capacity of FAU model i [m3 air / hr]
-x = 2000 #dummy variable - need to merge with John's design loop - YP
 
 # efficiency of the fan of FAU model i [kWh / m3 air]
 P = .00045
@@ -124,12 +109,14 @@ Celec = 1.4
 Cfilter = 50
 
 
+damperPlacement = ones(12)
+
 ####################################
 ######### Initialize Model #########
 ####################################
 
 #m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=0", "ms_enable=1"]))
-m = Model(solver = ClpSolver())
+m = Model(solver = AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"]))
 
 ####################################
 ######## Decision variables ########
@@ -150,26 +137,36 @@ m = Model(solver = ClpSolver())
 # humidity ratio of indoor air at time t [gm water / gm of dry air]
 @variable(m, HUMID[1:N, 1:T] >= 0)
 
+# rate of air intake at time t [m3 / hr]
+@variable(m, CMHCentral[1:T] >= 0)
+
+# damper positions in room i at time t [%]
+@variable(m, 0 <= damperPosition[1:N, 1:T] <= 1)
+
 
 #####################################
 ######## Dependent variables ########
 #####################################
 
 # number of PM2.5 filters required for all rooms
-@expression(m, numFilters, sum(roomPM25Absorption) / k)
+@expression(m, numFilters, sum(roomPM25Absorption[i,t] for i in 1:N for t in 1:T) / k)
+
+# CMH per room i at time t [m3 / hr]
+@NLexpression(m, CMHRoom[i=1:N, t=1:T], CMHCentral[t] * (damperPosition[i,t]*diffusers[i]) / (sum(damperPosition[i,t] * diffusers[i] for i in 1:N)))
 
 # rate of incoming humidity from FAU at time t [kg / hr]
-@expression(m, kgMoistureFAUIn[i=1:N, t=1:T], CMH[i, (t-1)%24 + 1] * airDensity * AMB_HUMID[t])
+@NLexpression(m, kgMoistureFAUIn[i=1:N, t=1:T], CMHRoom[i,t] * airDensity * AMB_HUMID[t])
 
 # rate of outgoing humidity from FAU at time t [kg / hr]
-@expression(m, kgMoistureFAUOut[i=1:N, t=1:T], CMH[i, (t-1)%24 + 1] * airDensity * HUMID[i,t])
+@NLexpression(m, kgMoistureFAUOut[i=1:N, t=1:T], CMHRoom[i,t] * airDensity * HUMID[i,t])
+@NLexpression(m, damperPositionFinal[i = 1:N, t = 1:T], min(damperPosition[i,t] + damperPlacement[i], 1))
 
 ######################################
 ######## Objective Functions #########
 ######################################
 
 # Minimize the total cost, equal to the sum of the cost of fan electricity over the operational period, plus the cost of PM2.5 filter replacements
-@objective(m, Min, Celec*(P*sum(CMH)*T/24 + ISMRE*sum(kgMoistureRemoved)) + Cfilter*numFilters)
+@objective(m, Min, Celec*(P*sum(CMHCentral[t] for t in 1:T) + ISMRE*sum(kgMoistureRemoved[i,t] for i in 1:N for t in 1:T)) + Cfilter*numFilters)
 
 
 ######################################
@@ -179,27 +176,27 @@ m = Model(solver = ClpSolver())
 # CO2 concentration in the room at time t is equal to the CO2 concentration in the room at t-1 plus (the CO2 mass introduced at t minus the CO2 mass removed at t) divided by the room volume
 # The constraint is structured this way because the HVAC system can only react to CO2 levels at time t, it cannot pre-emptively condition the air at t-1
 # What if we just assumed an air change rate based on the maximum CO2
-@constraint(m, [i=1:N, t=2:T], CO2[i,t] == CO2[i,t-1] + (roomCO2Source[rooms[i]][(t-1)%24 + 1] + CMH[i,(t-1)%24 + 1]*(AMB_CO2[t] - CO2[i,t]))/roomData[rooms[i]][2])
+@NLconstraint(m, [i=1:N, t=2:T], CO2[i,t] >= CO2[i,t-1] + (roomCO2Source[rooms[i]][(t-1)%24 + 1] + CMHRoom[i,t]*(AMB_CO2[t] - CO2[i,t]))/roomData[rooms[i]][2])
 
 # PM2.5 concentration in the room at time t is equal to the PM 2.5 in the room at t-1 plus the mass of PM2.5 introduced at time t minus the mass filtered at time t divided by the room volume
-@constraint(m, [i=1:N, t=2:T], PM25[i,t] == PM25[i,t-1] + (CMH[i, (t-1)%24 + 1]*(AMB_PM2_5[t] - PM25[i,t]) - roomPM25Absorption[i,t])/roomData[rooms[i]][2])
+@NLconstraint(m, [i=1:N, t=2:T], PM25[i,t] >= PM25[i,t-1] + (CMHRoom[i,t]*(AMB_PM2_5[t] - PM25[i,t]) - roomPM25Absorption[i,t])/roomData[rooms[i]][2])
 
 # Humidity ratio in the room at time t is equal to the Humidity ratio  in the room at t-1 plus (the H2O mass introduced at t minus the H2O mass removed at t) divided by the room volume
 # The constraint is structured this way because the HVAC system can only react to humidity levels at time t, it cannot pre-emptively condition the air at t-1
-@constraint(m, [i=1:N, t=2:T], HUMID[i,t] == HUMID[i,t-1] + (roomHumidSource[rooms[i]][(t-1)%24 + 1] + kgMoistureFAUIn[i,t] - kgMoistureFAUOut[i,t] - kgMoistureRemoved[i,t])/(roomData[rooms[i]][2] * airDensity))
+@NLconstraint(m, [i=1:N, t=2:T], HUMID[i,t] >= HUMID[i,t-1] + (roomHumidSource[rooms[i]][(t-1)%24 + 1] + kgMoistureFAUIn[i,t] - kgMoistureFAUOut[i,t] - kgMoistureRemoved[i,t])/(roomData[rooms[i]][2] * airDensity))
 
 # set  initial condition to ambient concentrations
-@constraint(m, [i=1:N], PM25[i,1] == PM25_0)
-@constraint(m, [i=1:N], CO2[i,1] == CO2_0)
-@constraint(m, [i=1:N], HUMID[i,1] == HUMID_0)
+@NLconstraint(m, [i=1:N], PM25[i,1] == PM25_0)
+@NLconstraint(m, [i=1:N], CO2[i,1] == CO2_0)
+@NLconstraint(m, [i=1:N], HUMID[i,1] == HUMID_0)
 
 # CO2, PM2.5 and Humidity concentrations reset at the end of the cycle.
-# @constraint(m, [i=1:N], PM25[i,T] == PM25[i,1])
-# @constraint(m, [i=1:N], CO2[i,T] == CO2[i,1])
-# @constraint(m, [i=1:N], HUMID[i,T] == HUMID[i,1])
+#@NLconstraint(m, [i=1:N], PM25[i,T] == PM25[i,1])
+#@NLconstraint(m, [i=1:N], CO2[i,T] == CO2[i,1])
+#@NLconstraint(m, [i=1:N], HUMID[i,T] == HUMID[i,1])
 
 # maximum allowable indoor CO2 concentration [ppm].  Constraints do not apply to first timestep, since conditioning has not yet been applied.
-@constraint(m, [i=1:N, t=2:T], CO2[i,t] <= CO2_MAX)
+@NLconstraint(m, [i=1:N, t=2:T], CO2[i,t] <= CO2_MAX)
 
 # maximum allowable indoor PM2.5 concentration [ug/m3].  Constraints do not apply to first timestep, since conditioning has not yet been applied.
 @constraint(m, [i=1:N, t=2:T], PM25[i,t] <= PM25_MAX)
@@ -223,7 +220,7 @@ Nfilter = getvalue(numFilters)
 
 PM25Absorbedresult = sum(getvalue(roomPM25Absorption),1)
 HUMIDAbsorbedresult = sum(getvalue(kgMoistureRemoved),1)
-CMHresult = sum(CMH,1)
+CMHresult = getvalue(CMHCentral)
 
 fmax = maximum(CMHresult)
 pmax = maximum(PM25Absorbedresult)

@@ -2,15 +2,17 @@
 # Authors: Sam Schreiber, John Stayner, Yan-Ping Wang
 # 2018-03-17
 
-
+include("test.jl")
 
 # Simple outer loop
-using inner_loop_john
-# using Gadfly
-using PyPlot
+#using inner_loop_john
+using Gadfly
+import PyPlot
+plt = PyPlot
 
 
-
+n_years = 20
+d = 1.06 # Discount rate for NPV + 1
 T = 24
 P = 0.5
 capacity = 10000
@@ -48,13 +50,17 @@ if best == 0
     best = "Infeasible"
 end
 
+NPV = [sum(ops_costs[i] / d^y for y = 1:n_years) for i = 1:length(ops_costs)]
+
 println("Best AHU: ", best, "\n",
         "Optimal Cost: ", optimal_cost)
 
-#= # Gadfly plotting
+
+
+# Gadfly plotting
 ops_vs_cap = plot(
     x = equip_costs,
-    y = ops_costs,
+    y = NPV,
     Geom.line,
     Guide.Title("Figure 3: Relationship between\nOperation Costs and Capital Costs"),
     Guide.XLabel("Capital Costs (RMB)"),
@@ -63,7 +69,16 @@ ops_vs_cap = plot(
 
 img = SVG("Op Costs vs Capital Costs.svg", 4inch, 4inch)
 draw(img, ops_vs_cap)
-=#
 
-plot(equip_costs, ops_costs)
+
+
+
+#=
+fig, ax = subplots()
+plot(equip_costs, NPV, "b.")
+#plot(equip_costs, ops_costs + 100, "b.")
 title("Plots of Costs")
+xlabel("Capital Costs")
+ylabel("Net Present Value (RMB)")
+labels = get_figlabels()
+=#
