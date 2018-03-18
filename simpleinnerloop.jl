@@ -30,7 +30,7 @@ T = 24
 data = readcsv("Master-Data_v2.0.csv")
 AQdata = readcsv("AirQualityData2016.csv")
 rooms = data[2:end,3]
-N = length(rooms)
+N = 1 #length(rooms)
 
 # CO2 concentration of outdoor air at time t [ppm]
 AMB_CO2 = AQdata[3:end,3]
