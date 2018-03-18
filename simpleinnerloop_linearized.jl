@@ -11,26 +11,26 @@ using AmplNLWriter
 
 using .inner_loop # Run small_NLP_inner_loop to load this module
 using Gadfly
-
+using NLP_loop
 
 ###############################
 ######### Define Sets #########
 ###############################
 
 # Currently testing a period of one year (8760) hours
-T = 8760
+T = 24
+T_repeat = 24
 
+data = readcsv("Room-Data_v3.0.csv")
+AQdata = readcsv("AirQualityData2016.csv")
+rooms = data[2:end,3]
+N = length(rooms)
 
 ###################################################
 ############ Define parameters and data ###########
 ###################################################
 
 ### Air Quality Parameters ###
-
-data = readcsv("Master-Data_v2.0.csv")
-AQdata = readcsv("AirQualityData2016.csv")
-rooms = data[2:end,3]
-N = length(rooms)
 
 # CO2 concentration of outdoor air at time t [ppm]
 AMB_CO2 = AQdata[3:end,3]
@@ -64,25 +64,29 @@ roomOccupancy = Dict{Int64, Array{Int64}}() #number of People in each hour
 roomCO2Source = Dict{Int64, Array{Float64}}() #cm3 of CO2 Produced in each hour
 roomCO2Max = Dict{Int64, Float64}() #cm3 of CO2 Produced in each hour
 roomHumidSource = Dict{Int64, Array{Float64}}() #kg H20 produced per hour
-CMH = zeros(N,24)
 
 for i = 1:N
-    roomData[rooms[i]] = data[i+1,4:6]
-    roomOccupancy[rooms[i]] = data[i+1,7:30]
+    roomData[rooms[i]] = data[i+1,4:7]
+    roomOccupancy[rooms[i]] = data[i+1,8:31]
     roomCO2Source[rooms[i]] = CO2pp .* roomOccupancy[rooms[i]]
     roomHumidSource[rooms[i]] = humidityPerPerson .* roomOccupancy[rooms[i]]
 end
 
 
 
-#= # This is done in the Dependent Parameters section now
-CMHpp = 80 #CMH per person, US guideline of 15 cfm/person
+
+#CMH = zeros(N,24)
 #CMHpp = 55 #CMH per person, US guideline of 15 cfm/person
 
-for i = 1:N
-    CMH[i,:] = CMHpp .* roomOccupancy[rooms[i]]
-end
-=#
+#for i = 1:N
+    #CMH[i,:] = CMHpp .* roomOccupancy[rooms[i]]
+#end
+
+CMH = CMH_opt(T_repeat, N)
+
+#println(round.(Int, CMH_Orig))
+#println(CMH)
+
 
 # initial indoor CO2 concentration at t = 0
 CO2_0 = AMB_CO2[1]
