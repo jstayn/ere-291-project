@@ -1,4 +1,4 @@
-# Working CMH Solver to be called by Operations_Opt.jl
+# Working CMH Solver with dampers to be called by module_innerloop.jl
 
 module NLP_loop
 
@@ -16,7 +16,7 @@ export CMH_opt
 
 PATH_TO_SOLVERS = ENV["ERE291_SOLVERS"]
 
-function CMH_opt(T, N)
+function CMH_opt(T, N, P, damperPlacement)
 
     data = readcsv("Room-Data_v3.0.csv")
     AQdata = readcsv("AirQualityData2016.csv")
@@ -30,7 +30,7 @@ function CMH_opt(T, N)
     AMB_CO2 = AQdata[3:end,3]
 
     # maximum allowable indoor CO2 concentration [ppm]
-    CO2_MAX = 800
+    CO2_MAX = 1000
 
     # Calculate rate of CO2 emissions from occupancy at time t [cm3 / hr]
     massPerson = 150 #lbs
@@ -53,13 +53,22 @@ function CMH_opt(T, N)
         roomCO2Source[rooms[i]] = CO2pp .* roomOccupancy[rooms[i]]
     end
 
-    totalDiffusers = sum(roomDiffusers[rooms[i]] for i=1:N)
+    # Number of air diffusers per room
+    diffusers = data[2:end, 7]
+    numDiffusers = sum(diffusers)
 
     # initial indoor CO2 concentration at t = 0
     CO2_0 = AMB_CO2[1]
 
-    # efficiency of the fan of FAU model i [kWh / m3 air]
-    P = .00045
+    # pressure drop through ducts [Pa]
+    pressureDropDucts = 103
+
+    # pressure drop through 1x HEPA filter [{Pa]
+    pressureDropHEPAFilter = 250
+
+    # pressure drop total [Pa]
+    pressureDropSystem = pressureDropDucts + pressureDropHEPAFilter
+
 
     ### Cost Parameters ###
 
@@ -71,7 +80,7 @@ function CMH_opt(T, N)
     ######### Initialize Model #########
     ####################################
 
-    m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"])) #, "ms_enable=1"]))
+    m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=1"])) #, "ms_enable=1"]))
 
 
     ####################################
@@ -92,11 +101,22 @@ function CMH_opt(T, N)
 
 
     ######################################
+    ######## Dependent Variables #########
+    ######################################
+
+    # force the damper open if damper_placement == 0
+    # If damper exists (damperPlacement[i] == 0), damperPosition is unaffected.
+    # If damper does not exist (damperPlacement[i] == 1), then damperPosition == 1.
+    @NLexpression(m, damperPositionFinal[i=1:N, t=1:T], min(damperPosition[i,t] + damperPlacement[i], 1))
+
+
+    ######################################
     ######## Objective Functions #########
     ######################################
 
-    # Minimize the total cost, equal to the sum of the cost of fan electricity over the operational period, plus the cost of PM2.5 filter replacements
-    @objective(m, Min, P * Celec * sum(CMHCentral[t] for t=1:T))
+    # Minimize the total cost, equal to the sum of the cost of fan electricity over the operational period
+    # plus the cost of additional power required due to pressure drop in the system
+    @objective(m, Min, Celec * sum(CMHCentral[t] for t=1:T) * (P + pressureDropSystem / 3600 / 1000))
 
 
     ######################################
@@ -114,15 +134,15 @@ function CMH_opt(T, N)
     @constraint(m, [i=1:N, t=2:T], CO2[i,t] <= CO2_MAX)
 
     # the CMH in each room is equal to the total CMH divided by the ratio of the damper opening to the current room over the total damper openings.  Assumes all ducts are the same size
-    @NLconstraint(m, [i=1:N, t=1:T], CMHRoom[i,t] <= CMHCentral[t] * (damperPosition[i,t] / sum(damperPosition[i,t] for i=1:N)))
-
+    #@NLconstraint(m, [i=1:N, t=1:T], CMHRoom[i,t] <= CMHCentral[t] * (damperPosition[i,t] / sum(damperPosition[i,t] for i=1:N)))
+    @NLconstraint(m, [i=1:N, t=1:T], CMHRoom[i,t] <= CMHCentral[t] * (damperPositionFinal[i,t]*diffusers[i]) / (sum(damperPositionFinal[i,t] * diffusers[i] for i in 1:N)))
 
     ######################################
     ########### Print and solve ##########
     ######################################
 
     #print(m)
-    solve(m)
+    status = solve(m)
 
     CO2result = getvalue(CO2)
     CO2resultSum = sum(CO2result, 1)
@@ -134,13 +154,9 @@ function CMH_opt(T, N)
 
     cost = getobjectivevalue(m)
 
-    println("Total Cost [rmb]: ", cost)
-    println("Total Fan Power Costs [RMB]: ", sum(CMHresult) * P * Celec)
-    println("Maximum Fan Load [cmh]: ", fmax)
+    println("One-day Fan Power Costs [RMB]: ", cost)
 
-    CMHRoomResultRounded = round.(Int, CMHresult)
-
-    return CMHRoomResult
+    return CMHRoomResult, fmax, status
 
 end
 
