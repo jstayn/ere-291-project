@@ -84,6 +84,10 @@ end
 println("Best AHU: ", best, "\n",
         "Optimal Cost: ", optimal_cost)
 
+writecsv("capex.csv", capexResults)
+writecsv("NPV.csv", NPVResults)
+writecsv("feasibility.csv", feasibilityResults)
+
 ops_vs_cap = plot(
     x = capex,
     y = NPVResults,
@@ -95,7 +99,3 @@ ops_vs_cap = plot(
 
 img = SVG("NPV vs Capital Costs.svg", 4inch, 4inch)
 draw(img, NPV_vs_cap)
-
-writecsv("capex.csv", capexResults)
-writecsv("NPV.csv", NPVResults)
-writecsv("feasibility.csv", feasibilityResults)
