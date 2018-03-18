@@ -1,12 +1,12 @@
 # Test for ERE 291
 
-module inner_loop
+module inner_loop_john
 
 using JuMP
 using Clp
 using Cbc
 using AmplNLWriter
-using Gadfly
+#using Gadfly
 
 export operations_optimization
 ####################################
@@ -16,7 +16,6 @@ export operations_optimization
 PATH_TO_SOLVERS = ENV["ERE291_SOLVERS"]
 
 function operations_optimization(T, P, capacity)
-
 
     ###################################################
     ############ Define parameters and data ###########
@@ -61,7 +60,7 @@ function operations_optimization(T, P, capacity)
     ######### Initialize Model #########
     ####################################
 
-    m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=0", "ms_enable=1"]))
+    m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=0"]))
 
     ####################################
     ######## Decision variables ########
@@ -120,7 +119,6 @@ function operations_optimization(T, P, capacity)
 
     fmax = maximum(CMHresult)
     cost = getobjectivevalue(m)
-    println("Solved with P = ", P, ", and f_max = ", f_max)
 
     return fmax <= capacity, cost
 

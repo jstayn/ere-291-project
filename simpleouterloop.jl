@@ -5,8 +5,10 @@
 
 
 # Simple outer loop
-using inner_loop
-using Gadfly
+using inner_loop_john
+# using Gadfly
+using PyPlot
+
 
 
 T = 24
@@ -27,7 +29,7 @@ ops_costs = []
 # Note that right now our inner loop is implemented such that the efficiency
 # number it takes is in kWh/m^3 where more efficiency numbers are given in
 # m^3/kWh, so we take the inverse of the efficiency when we pass it in on line
-# 33. 
+# 33.
 
 for i = 1:size(equip_data)[1]
     feasibility, ops_cost = operations_optimization(T, 1 / equip_efficiency[i],
@@ -49,6 +51,7 @@ end
 println("Best AHU: ", best, "\n",
         "Optimal Cost: ", optimal_cost)
 
+#= # Gadfly plotting
 ops_vs_cap = plot(
     x = equip_costs,
     y = ops_costs,
@@ -60,3 +63,7 @@ ops_vs_cap = plot(
 
 img = SVG("Op Costs vs Capital Costs.svg", 4inch, 4inch)
 draw(img, ops_vs_cap)
+=#
+
+plot(equip_costs, ops_costs)
+title("Plots of Costs")
