@@ -3,6 +3,7 @@
 # Authors: Sam Schreiber, John Stayner, Yan-Ping Wang
 # 2018-03-08
 
+include("module_innerloop.jl")
 
 # Simple outer loop
 using inner_loop
