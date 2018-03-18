@@ -9,7 +9,7 @@ using Clp
 using Cbc
 using AmplNLWriter
 
-using DataFrames
+using .inner_loop # Run small_NLP_inner_loop to load this module
 using Gadfly
 using NLP_loop
 
@@ -72,11 +72,8 @@ for i = 1:N
     roomHumidSource[rooms[i]] = humidityPerPerson .* roomOccupancy[rooms[i]]
 end
 
-# Set CMH during occupied hours based on the difference between the ppm generated and the max allowable ppm level
 
-### INSERT FUNCTION CALL TO 24-HOUR NONLINEAR CMH SOLVER HERE ###
-### SHOULD RETURN CMH PER ROOM FOR A SINGLE DAY ###
-### REPLACE HARD-CODED CMH PARAMETER ###
+
 
 #CMH = zeros(N,24)
 #CMHpp = 55 #CMH per person, US guideline of 15 cfm/person
@@ -89,6 +86,7 @@ CMH = CMH_opt(T_repeat, N)
 
 #println(round.(Int, CMH_Orig))
 #println(CMH)
+
 
 # initial indoor CO2 concentration at t = 0
 CO2_0 = AMB_CO2[1]
@@ -119,7 +117,6 @@ ISMRE = 0.5
 # efficiency of PM2.5 filter
 R = 0.8 #do we still need this? - YP
 
-
 ### Cost Parameters ###
 
 # cost of electricity at time t [RMB/kWh]
@@ -128,6 +125,10 @@ Celec = 1.4
 # cost per in-room PM2.5 filter [RMB/filter]
 Cfilter = 50
 
+######## Dependent parameters ########
+
+# Set CMH during occupied hours based on the difference between the ppm generated and the max allowable ppm level
+CMH = one_day(P)
 
 ####################################
 ######### Initialize Model #########
