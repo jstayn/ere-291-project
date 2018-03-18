@@ -1,7 +1,7 @@
 ####################################
 ######## Initialize packages #######
 ####################################
-println("Here!")
+
 PATH_TO_SOLVERS = ENV["ERE291_SOLVERS"]
 
 using JuMP
@@ -15,7 +15,7 @@ using Gadfly
 ###############################
 
 # Currently testing a period of one year (8760) hours
-T = 168
+T = 8760
 
 ###################################################
 ############ Define parameters and data ###########
@@ -110,10 +110,10 @@ Cfilter = 50
 ####################################
 ######### Initialize Model #########
 ####################################
-println("Here!")
+
 
 #m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=0", "ms_enable=1"]))
-m = Model(solver = AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"]))
+m = Model(solver = AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2", "maxit=1000", "ms_enable=1", "ms_maxsolves=10"]))
 
 ####################################
 ######## Decision variables ########
@@ -135,7 +135,7 @@ m = Model(solver = AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"]
 @variable(m, HUMID[1:N, 1:T] >= 0)
 
 # rate of air intake at time t [m3 / hr]
-@variable(m, CMHCentral[1:T] >= 0)
+@variable(m, CMHCentral[1:T] >= 0, start=10000)
 
 # damper positions in room i at time t [%]
 @variable(m, 0 <= damperPosition[1:N, 1:T] <= 1)
@@ -145,7 +145,7 @@ m = Model(solver = AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"]
 #####################################
 ######## Dependent variables ########
 #####################################
-println("Here!")
+
 # number of PM2.5 filters required for all rooms
 @expression(m, numFilters, sum(roomPM25Absorption[i,t] for i in 1:N for t in 1:T) / k)
 
@@ -165,8 +165,8 @@ println("Here!")
 ######################################
 ############# Constraints ############
 ######################################
-println("Here!")
-@NLconstraint(m, [i=1:N, t=1:T], CMHRoom[i,t] >= CMHCentral[t] * (damperPosition[i,t]*diffusers[i]) / (sum(damperPosition[j,t] * diffusers[j] for j in 1:N)))
+
+@NLconstraint(m, [i=1:N, t=1:T], CMHRoom[i,t] == CMHCentral[t] * (damperPosition[i,t]*diffusers[i]) / (sum(damperPosition[j,t] * diffusers[j] for j in 1:N)))
 
 # CO2 concentration in the room at time t is equal to the CO2 concentration in the room at t-1 plus (the CO2 mass introduced at t minus the CO2 mass removed at t) divided by the room volume
 # The constraint is structured this way because the HVAC system can only react to CO2 levels at time t, it cannot pre-emptively condition the air at t-1
@@ -179,7 +179,7 @@ println("Here!")
 # Humidity ratio in the room at time t is equal to the Humidity ratio  in the room at t-1 plus (the H2O mass introduced at t minus the H2O mass removed at t) divided by the room volume
 # The constraint is structured this way because the HVAC system can only react to humidity levels at time t, it cannot pre-emptively condition the air at t-1
 @NLconstraint(m, [i=1:N, t=2:T], HUMID[i,t] >= HUMID[i,t-1] + (roomHumidSource[rooms[i]][(t-1)%24 + 1] + kgMoistureFAUIn[i,t] - kgMoistureFAUOut[i,t] - kgMoistureRemoved[i,t])/(roomData[rooms[i]][2] * airDensity))
-println("Here!")
+
 # set  initial condition to ambient concentrations
 @NLconstraint(m, [i=1:N], PM25[i,1] == PM25_0)
 @NLconstraint(m, [i=1:N], CO2[i,1] == CO2_0)
@@ -198,7 +198,7 @@ println("Here!")
 
 # maximum allowable indoor humidity ratio [gm water / gm of Dry Air].  Constraints do not apply to first timestep, since conditioning has not yet been applied.
 @constraint(m, [i=1:N, t=2:T], HUMID[i,t] <= HUMID_MAX)
-println("Here!")
+
 ######################################
 ########### Print and solve ##########
 ######################################
@@ -206,6 +206,7 @@ println("Here!")
 print(m)
 solve(m)
 
+CHMroomoutput = getvalue(CMHRoom)
 CO2output = getvalue(CO2)
 PM25output = getvalue(PM25)
 HUMIDoutput = getvalue(HUMID)
@@ -244,6 +245,10 @@ println("Maximum Dehumidification Load [kg water]: ", hmax)
 
 println("Nfilter [num]: ", Nfilter)
 
+roomOutput = data[2:end, 1:7]
+blankline = zeros(1,size(roomOutput,2)+size(CMHroomoutput,2))
+filename = "output.csv"
+writecsv(filename, [roomOutput CMHroomoutput; zeros(1,7) CMHresult'; blankline; roomOutput CO2output; zeros(1,7) CO2result; blankline; roomOutput PM25output; zeros(1,7) PM25result; zeros(1,7) PM25Absorbedresult; blankline; roomOutput HUMIDoutput; zeros(1,7) HUMIDresult; zeros(1,7) HUMIDAbsorbedresult])
 
 # Plotting -- use Pkg.add("Gadfly") if you don't have it installed
 #= Each plot will work individually by plotting into the "plot" sector of Atom.
