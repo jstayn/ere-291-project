@@ -26,6 +26,9 @@ rooms = data[2:end,3]
 
 N = length(rooms)
 
+damperPlacement = [1,1,1,1,0,0,0,0,0,0,0,0]
+damperCost = 5000
+
 ###################################################
 ############ Define parameters and data ###########
 ###################################################
@@ -34,7 +37,7 @@ N = length(rooms)
 AMB_CO2 = AQdata[3:end,3]
 
 # maximum allowable indoor CO2 concentration [ppm]
-CO2_MAX = 800
+CO2_MAX = 1000
 
 # Calculate rate of CO2 emissions from occupancy at time t [cm3 / hr]
 massPerson = 150 #lbs
@@ -57,7 +60,9 @@ for i = 1:N
     roomCO2Source[rooms[i]] = CO2pp .* roomOccupancy[rooms[i]]
 end
 
-totalDiffusers = sum(roomDiffusers[rooms[i]] for i=1:N)
+# Number of air diffusers per room
+diffusers = data[2:end, 7]
+numDiffusers = sum(diffusers)
 
 # initial indoor CO2 concentration at t = 0
 CO2_0 = AMB_CO2[1]
@@ -75,7 +80,7 @@ Celec = 1.4
 ######### Initialize Model #########
 ####################################
 
-m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"])) #, "ms_enable=1"]))
+m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=0"])) #, "ms_enable=1"]))
 
 
 ####################################
@@ -93,6 +98,16 @@ m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"]))
 
 # Damper positions in room i at time t [%]
 @variable(m, CMHRoom[1:N, 1:T] >= 0, start=1)
+
+
+######################################
+######## Dependent Variables #########
+######################################
+
+# force the damper open if damper_placement == 0
+# If damper exists (damperPlacement[i] == 0), damperPosition is unaffected.
+# If damper does not exist (damperPlacement[i] == 1), then damperPosition == 1.
+@NLexpression(m, damperPositionFinal[i=1:N, t=1:T], min(damperPosition[i,t] + damperPlacement[i], 1))
 
 
 ######################################
@@ -118,7 +133,7 @@ m = Model(solver=AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2"]))
 @constraint(m, [i=1:N, t=2:T], CO2[i,t] <= CO2_MAX)
 
 # the CMH in each room is equal to the total CMH divided by the ratio of the damper opening to the current room over the total damper openings.  Assumes all ducts are the same size
-@NLconstraint(m, [i=1:N, t=1:T], CMHRoom[i,t] <= CMHCentral[t] * (damperPosition[i,t] / sum(damperPosition[i,t] for i=1:N)))
+@NLconstraint(m, [i=1:N, t=1:T], CMHRoom[i,t] <= CMHCentral[t] * (damperPositionFinal[i,t]*diffusers[i]) / (sum(damperPositionFinal[i,t] * diffusers[i] for i in 1:N)))
 
 
 ######################################

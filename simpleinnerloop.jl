@@ -27,10 +27,10 @@ T = 24
 
 ### Air Quality Parameters ###
 
-data = readcsv("Master-Data_v2.0.csv")
+data = readcsv("Room-Data_v3.0.csv")
 AQdata = readcsv("AirQualityData2016.csv")
 rooms = data[2:end,3]
-N = 1 #length(rooms)
+N = length(rooms)
 
 # CO2 concentration of outdoor air at time t [ppm]
 AMB_CO2 = AQdata[3:end,3]
@@ -67,17 +67,11 @@ roomHumidSource = Dict{Int64, Array{Float64}}() #kg H20 produced per hour
 CMH = zeros(N,24)
 
 for i = 1:N
-    roomData[rooms[i]] = data[i+1,4:6]
-    roomOccupancy[rooms[i]] = data[i+1,7:30]
+    roomData[rooms[i]] = data[i+1,4:7]
+    roomOccupancy[rooms[i]] = data[i+1,8:31]
     roomCO2Source[rooms[i]] = CO2pp .* roomOccupancy[rooms[i]]
     roomHumidSource[rooms[i]] = humidityPerPerson .* roomOccupancy[rooms[i]]
 end
-
-# Set CMH during occupied hours based on the difference between the ppm generated and the max allowable ppm level
-
-### INSERT FUNCTION CALL TO 24-HOUR NONLINEAR CMH SOLVER HERE ###
-### SHOULD RETURN CMH PER ROOM FOR A SINGLE DAY ###
-### REPLACE HARD-CODED CMH PARAMETER ###
 
 CMHpp = 55 #CMH per person, US guideline of 15 cfm/person
 
