@@ -15,7 +15,7 @@ using Gadfly
 ###############################
 
 # Currently testing a period of one year (8760) hours
-T = 8760
+T = 24
 
 ###################################################
 ############ Define parameters and data ###########
@@ -71,6 +71,15 @@ end
 # Number of air diffusers per room
 diffusers = data[2:end, 7]
 numDiffusers = sum(diffusers)
+
+# pressure drop through ducts [Pa]
+pressureDropDucts = 103
+
+# pressure drop through 1x HEPA filter [{Pa]
+pressureDropHEPAFilter = 250
+
+# pressure drop total [Pa]
+pressureDropSystem = pressureDropDucts + pressureDropHEPAFilter
 
 # initial indoor CO2 concentration at t = 0
 CO2_0 = AMB_CO2[1]
@@ -160,7 +169,7 @@ m = Model(solver = AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2",
 ######################################
 
 # Minimize the total cost, equal to the sum of the cost of fan electricity over the operational period, plus the cost of PM2.5 filter replacements
-@objective(m, Min, Celec*(P*sum(CMHCentral[t] for t in 1:T) + ISMRE*sum(kgMoistureRemoved[i,t] for i in 1:N for t in 1:T)) + Cfilter*numFilters)
+@objective(m, Min, Celec*((P + pressureDropSystem / 3600/ 1000) * sum(CMHCentral[t] for t in 1:T) + ISMRE*sum(kgMoistureRemoved[i,t] for i in 1:N for t in 1:T)) + Cfilter*numFilters)
 
 ######################################
 ############# Constraints ############
@@ -203,8 +212,7 @@ m = Model(solver = AmplNLSolver(joinpath(PATH_TO_SOLVERS,"knitro"), ["outlev=2",
 ########### Print and solve ##########
 ######################################
 
-print(m)
-solve(m)
+status = solve(m)
 
 CHMroomoutput = getvalue(CMHRoom)
 CO2output = getvalue(CO2)
