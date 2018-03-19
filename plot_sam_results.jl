@@ -2,8 +2,9 @@
 # 2018-03-18
 
 using DataFrames
-using CSV
+import CSV
 using Gadfly
+
 
 
 NLP_data = CSV.read("NLP_one_week.csv", nullable = false)
@@ -50,7 +51,7 @@ PM25_plot =
         Geom.line,
         Guide.Title("PM2.5 Concentration (µg)"),
         Guide.XLabel("Time (hrs)"),
-        Guide.YLabel("PM2.5 Concentration (micrograms / m^3)"),
+        Guide.YLabel("PM2.5 Concentration (µg / m^3)"),
         light_theme
     )
 
@@ -62,7 +63,7 @@ PM25_absorbed_plot =
         Geom.line,
         Guide.Title("PM2.5 Removed by Filters"),
         Guide.XLabel("Time (hrs)"),
-        Guide.YLabel("PM2.5 Removed (micrograms)"),
+        Guide.YLabel("PM2.5 Removed (µg)"),
         light_theme
     )
 
@@ -84,9 +85,9 @@ HUMID_absorbed_plot =
         x = "Timestep",
         y = "Humidity_removed",
         Geom.line,
-        Guide.Title("Moisture Removed"),
+        Guide.Title("Moisture Removed by Dehumidification"),
         Guide.XLabel("Time (hrs)"),
-        Guide.YLabel("Moisture Removed by Dehumidification (g H2O)"),
+        Guide.YLabel("Moisture Removed (g H2O)"),
         light_theme
     )
 
@@ -97,5 +98,5 @@ final = vstack(
     hstack(HUMID_plot, HUMID_absorbed_plot)
     )
 
-img = SVG("NLP_one_week.svg", 12inch, 12inch)
+img = PNG("NLP_one_week.png", 12inch, 12inch)
 draw(img, final)
