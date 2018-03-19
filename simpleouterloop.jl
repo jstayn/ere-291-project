@@ -7,6 +7,8 @@ include("module_innerloop.jl")
 
 # Simple outer loop
 using inner_loop
+using DataFrames
+import CSV
 using Gadfly
 
 T = 8760
@@ -24,6 +26,9 @@ damper_cost = 5000
 
 optimal_cost = Inf
 best = 0
+
+AHU_num = []
+damper_num = []
 
 capexResults = []
 opexResults = []
@@ -69,6 +74,9 @@ for i = 1:size(equip_data)[1]
         capex = equip_costs[i] + sum(damper_cost * (1 - damperPlacementOptions[j][k]) for k = 1:length(damperPlacementOptions[j]))
         NPC = capex + sum(opex/(1+discountRate)^p for p=1:nYears)
 
+        push!(AHU_num, i)
+        push!(damper_num, j)
+
         push!(capexResults, capex)
         push!(opexResults, opex)
         push!(NPCResults, NPC)
@@ -88,6 +96,26 @@ for i = 1:size(equip_data)[1]
     end
 end
 
+#= # Populate AHU_num and damper_num if not done already
+for i = 1:size(equip_data)[1]
+    for j = 1:length(damperPlacementOptions)
+        push!(AHU_num, i)
+        push!(damper_num, j)
+    end
+end
+=#
+
+feasibility_strings = []
+
+for i = 1:length(feasibilityResults)
+    if(feasibilityResults[i]) == true
+        push!(feasibility_strings, "Feasible")
+    else push!(feasibility_strings, "Infeasible")
+    end
+end
+
+
+# Write CSVs (Yan-Ping method)
 writecsv("capex.csv", capexResults)
 writecsv("opex.csv", opexResults)
 writecsv("NPC.csv", NPCResults)
@@ -97,16 +125,62 @@ writecsv("pmax.csv", pmaxResults)
 writecsv("hmax.csv", hmaxResults)
 #writecsv("NLPStatus.csv", NLPstatusResults)
 
+# Create dataframe and write that (John method, for importing to R)
+
+df = DataFrame(
+        AHU = AHU_num,
+        dampers = damper_num,
+        Cap_ex = capexResults,
+        Op_ex = opexResults,
+        NPC = NPCResults,
+        feasibility = feasibility_strings,
+        fmax = fmaxResults,
+        pmax = pmaxResults,
+        hmax = hmaxResults
+    )
+writetable("pareto_data.csv", df)
+
 println("NLPStatus: ", NLPstatusResults)
 
-#ops_vs_cap = plot(
-    #x = capexResults,
-    #y = NPCResults,
-    #Geom.point,
-    #Guide.Title("Figure 3: Relationship between\nNPC and Capital Costs"),
-    #Guide.XLabel("Capital Costs (RMB)"),
-    #Guide.YLabel("NPC (RMB)")
-    #)
 
-#img = SVG("NPC vs Capital Costs.svg", 4inch, 4inch)
-#draw(img, NPC_vs_cap)
+########### Plotting #######################
+
+
+
+function cap_costs_scale(x)
+    if x == 0
+        return "0 RMB"
+    end
+    scale_factor = 1000
+    "$(Int(x / scale_factor))k RMB"
+end
+
+function NPC_scale(y)
+    scale_factor = 1000
+    "$(Int(y / scale_factor))k RMB"
+end
+
+light_theme = Theme(
+    background_color = "white",
+    panel_fill = "white",
+    default_color = "blue",
+    key_position = :right
+    )
+
+ops_vs_cap = plot(
+    x = capexResults[1:length(damperPlacementOptions)*3],
+    y = NPCResults[1:length(damperPlacementOptions)*3],
+    color = feasibility_strings[1:length(damperPlacementOptions)*3],
+    Geom.point,
+    Guide.Title("Pareto Curves"),
+    Guide.XLabel("Capital Costs (Thousands of RMB)"),
+    Guide.YLabel("Operating Costs (Thousands of RMB)"),
+    Guide.ColorKey(title = ""),
+    Scale.x_continuous(labels = cap_costs_scale),
+    Scale.y_continuous(labels = NPC_scale),
+    Scale.color_discrete_manual("blue", "black", levels = ["Feasible", "Infeasible"]),
+    light_theme
+    )
+
+img = SVG("NPC vs Capital Costs.svg", 6inch, 6inch)
+draw(img, ops_vs_cap)
