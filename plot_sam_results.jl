@@ -3,58 +3,91 @@
 
 using DataFrames
 using CSV
+using Gadfly
 
-readcsv("NLP_one_week.csv")
 
-df = CSV.read("NLP_one_week.csv")
+NLP_data = CSV.read("NLP_one_week.csv", nullable = false)
 
+test = DataFrame(test_x = 1:10, test_y = ones(10))
+
+plot(test, x = "test_x", y = "test_y", Geom.line)
+
+light_theme = Theme(
+    background_color = "white",
+    panel_fill = "white",
+    default_color = "blue",
+    key_position = :right
+    )
 
 CMH_plot =
-    plot(
-        x = 1:length(CMHresult),
-        y = CMHresult,
+    plot(NLP_data,
+        x = "Timestep",
+        y = "CMH",
         Geom.line,
-        Guide.Title("CMH at timestep x")
+        Guide.Title("Air Flow into Building"),
+        Guide.XLabel("Time (hrs)"),
+        Guide.YLabel("Air Flow (CMH)"),
+        light_theme
     )
 
 CO2_plot =
     plot(
-        x = 0:length(CO2result) - 1,
-        y = CO2result,
+        NLP_data,
+        x = "Timestep",
+        y = "CO2",
         Geom.line,
-        Guide.Title("CO2 Concentration inside room (ppm)")
+        Guide.Title("CO2 Concentration inside room (ppm)"),
+        Guide.XLabel("Time (hrs)"),
+        Guide.YLabel("CO2 Concentration (ppm)"),
+        light_theme
     )
 
 PM25_plot =
     plot(
-        x = 0:length(PM25result) - 1,
-        y = PM25result,
+        NLP_data,
+        x = "Timestep",
+        y = "PM25",
         Geom.line,
-        Guide.Title("PM2.5 Concentration (µg)")
+        Guide.Title("PM2.5 Concentration (µg)"),
+        Guide.XLabel("Time (hrs)"),
+        Guide.YLabel("PM2.5 Concentration (micrograms / m^3)"),
+        light_theme
     )
 
 PM25_absorbed_plot =
     plot(
-        x = 1:length(PM25Absorbedresult),
-        y = PM25Absorbedresult,
+        NLP_data,
+        x = "Timestep",
+        y = "PM25_removed",
         Geom.line,
-        Guide.Title("PM2.5 Removed by Filters")
+        Guide.Title("PM2.5 Removed by Filters"),
+        Guide.XLabel("Time (hrs)"),
+        Guide.YLabel("PM2.5 Removed (micrograms)"),
+        light_theme
     )
 
 HUMID_plot =
     plot(
-        x = 0:length(HUMIDresult) - 1,
-        y = HUMIDresult,
+        NLP_data,
+        x = "Timestep",
+        y = "Humidity",
         Geom.line,
-        Guide.Title("Humidity Ratio (kg Water / kg dry air)")
+        Guide.Title("Humidity"),
+        Guide.XLabel("Time (hrs)"),
+        Guide.YLabel("Humidity Ratio (moisture content)"),
+        light_theme
     )
 
 HUMID_absorbed_plot =
     plot(
-        x = 1:length(HUMIDAbsorbedresult),
-        y = HUMIDAbsorbedresult,
+        NLP_data,
+        x = "Timestep",
+        y = "Humidity_removed",
         Geom.line,
-        Guide.Title("Moisture Removed by Dehumidification")
+        Guide.Title("Moisture Removed"),
+        Guide.XLabel("Time (hrs)"),
+        Guide.YLabel("Moisture Removed by Dehumidification (g H2O)"),
+        light_theme
     )
 
 
