@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:gadfly="http://www.gadflyjl.org/ns"
+     version="1.2"
+     width="304.8mm" height="304.8mm" viewBox="0 0 304.8 304.8"
+     stroke="none"
+     fill="#000000"
+     stroke-width="0.3"
+     font-size="3.88"
+>
+<g stroke="#000000" stroke-opacity="0.000" fill="#FFFFFF" id="img-416b9fd1-1">
+  <rect x="152.4" y="203.2" width="152.4" height="101.6"/>
+</g>
+<g class="plotroot xscalable yscalable" id="img-416b9fd1-2">
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-3">
+    <text x="274.9" y="293.19" text-anchor="middle" dy="0.6em">Time (hrs)</text>
+  </g>
+  <g class="guide xlabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="img-416b9fd1-4">
+    <text x="252" y="286.51" text-anchor="middle" dy="0.6em">0</text>
+    <text x="263.45" y="286.51" text-anchor="middle" dy="0.6em">50</text>
+    <text x="274.9" y="286.51" text-anchor="middle" dy="0.6em">100</text>
+    <text x="286.35" y="286.51" text-anchor="middle" dy="0.6em">150</text>
+    <text x="297.8" y="286.51" text-anchor="middle" dy="0.6em">200</text>
+  </g>
+<g clip-path="url(#img-416b9fd1-5)">
+  <g id="img-416b9fd1-6">
+    <g pointer-events="visible" opacity="1" fill="#FFFFFF" stroke="#000000" stroke-opacity="0.000" class="guide background" id="img-416b9fd1-7">
+      <rect x="250" y="213.81" width="49.8" height="71.7"/>
+    </g>
+    <g class="guide ygridlines xfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="img-416b9fd1-8">
+      <path fill="none" d="M250,283.51 L 299.8 283.51"/>
+      <path fill="none" d="M250,266.59 L 299.8 266.59"/>
+      <path fill="none" d="M250,249.66 L 299.8 249.66"/>
+      <path fill="none" d="M250,232.74 L 299.8 232.74"/>
+      <path fill="none" d="M250,215.81 L 299.8 215.81"/>
+    </g>
+    <g class="guide xgridlines yfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="img-416b9fd1-9">
+      <path fill="none" d="M252,213.81 L 252 285.51"/>
+      <path fill="none" d="M263.45,213.81 L 263.45 285.51"/>
+      <path fill="none" d="M274.9,213.81 L 274.9 285.51"/>
+      <path fill="none" d="M286.35,213.81 L 286.35 285.51"/>
+      <path fill="none" d="M297.8,213.81 L 297.8 285.51"/>
+    </g>
+    <g class="plotpanel" id="img-416b9fd1-10">
+      <g stroke-width="0.3" fill="#000000" fill-opacity="0.000" class="geometry" stroke-dasharray="none" stroke="#0000FF" id="img-416b9fd1-11">
+        <path fill="none" d="M252.23,283.51 L 252.46 283.51 252.69 283.51 252.92 283.51 253.15 283.51 253.38 283.51 253.61 283.51 253.84 283.51 254.06 283.51 254.29 283.51 254.52 283.51 254.75 283.51 254.98 283.51 255.21 283.51 255.44 283.51 255.67 283.51 255.9 283.51 256.13 283.51 256.35 283.51 256.58 283.51 256.81 283.51 257.04 283.51 257.27 283.51 257.5 283.51 257.73 283.51 257.96 283.51 258.19 283.51 258.41 283.51 258.64 283.51 258.87 283.51 259.1 283.51 259.33 283.51 259.56 283.51 259.79 283.51 260.02 283.51 260.25 283.51 260.48 283.51 260.7 283.51 260.93 283.51 261.16 283.51 261.39 283.51 261.62 283.51 261.85 283.51 262.08 283.51 262.31 283.51 262.54 283.51 262.77 283.51 262.99 274.53 263.22 270.53 263.45 262.63 263.68 257.19 263.91 252.64 264.14 248.92 264.37 244.86 264.6 241.15 264.83 236.55 265.06 231.01 265.28 283.51 265.51 283.51 265.74 283.51 265.97 283.51 266.2 283.51 266.43 283.51 266.66 283.51 266.89 283.51 267.12 283.51 267.35 283.51 267.57 283.51 267.8 283.51 268.03 283.51 268.26 283.51 268.49 283.51 268.72 283.51 268.95 283.51 269.18 283.51 269.41 283.51 269.64 283.51 269.86 283.51 270.09 283.51 270.32 283.51 270.55 283.51 270.78 283.51 271.01 283.51 271.24 283.51 271.47 283.51 271.7 283.51 271.92 283.51 272.15 283.51 272.38 283.51 272.61 283.51 272.84 283.51 273.07 283.51 273.3 283.51 273.53 283.51 273.76 283.51 273.99 283.51 274.21 283.51 274.44 283.51 274.67 283.51 274.9 283.51 275.13 283.51 275.36 283.51 275.59 283.51 275.82 283.51 276.05 283.51 276.28 283.51 276.5 283.51 276.73 283.51 276.96 283.51 277.19 283.51 277.42 283.51 277.65 283.51 277.88 283.51 278.11 283.51 278.34 283.51 278.57 283.51 278.79 283.51 279.02 283.51 279.25 283.51 279.48 283.51 279.71 283.51 279.94 283.51 280.17 283.51 280.4 283.51 280.63 283.51 280.86 283.51 281.08 283.51 281.31 283.51 281.54 283.51 281.77 283.51 282 283.51 282.23 283.51 282.46 283.51 282.69 283.51 282.92 283.51 283.15 283.51 283.37 283.51 283.6 283.51 283.83 283.51 284.06 283.51 284.29 283.51 284.52 283.51 284.75 283.51 284.98 283.51 285.21 283.51 285.43 283.51 285.66 283.51 285.89 283.51 286.12 283.51 286.35 283.51 286.58 283.51 286.81 283.51 287.04 283.51 287.27 283.51 287.5 283.51 287.72 283.51 287.95 283.51 288.18 283.51 288.41 283.51 288.64 283.51 288.87 283.51 289.1 283.51 289.33 283.51 289.56 283.51 289.79 283.51 290.01 283.51 290.24 283.51 290.47 283.51"/>
+      </g>
+    </g>
+  </g>
+</g>
+  <g class="guide ylabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="img-416b9fd1-12">
+    <text x="249" y="283.51" text-anchor="end" dy="0.35em">0.000</text>
+    <text x="249" y="266.59" text-anchor="end" dy="0.35em">0.005</text>
+    <text x="249" y="249.66" text-anchor="end" dy="0.35em">0.010</text>
+    <text x="249" y="232.74" text-anchor="end" dy="0.35em">0.015</text>
+    <text x="249" y="215.81" text-anchor="end" dy="0.35em">0.020</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-13">
+    <text x="238.64" y="249.66" text-anchor="end" dy="0.35em">Moisture Removed by Dehumidification (g H2O)</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-14">
+    <text x="274.9" y="208.2" text-anchor="middle" dy="0.6em">Moisture Removed</text>
+  </g>
+</g>
+<g stroke="#000000" stroke-opacity="0.000" fill="#FFFFFF" id="img-416b9fd1-15">
+  <rect x="0" y="203.2" width="152.4" height="101.6"/>
+</g>
+<g class="plotroot xscalable yscalable" id="img-416b9fd1-16">
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-17">
+    <text x="84.69" y="293.19" text-anchor="middle" dy="0.6em">Time (hrs)</text>
+  </g>
+  <g class="guide xlabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="img-416b9fd1-18">
+    <text x="23.98" y="286.51" text-anchor="middle" dy="0.6em">0</text>
+    <text x="54.33" y="286.51" text-anchor="middle" dy="0.6em">50</text>
+    <text x="84.69" y="286.51" text-anchor="middle" dy="0.6em">100</text>
+    <text x="115.04" y="286.51" text-anchor="middle" dy="0.6em">150</text>
+    <text x="145.4" y="286.51" text-anchor="middle" dy="0.6em">200</text>
+  </g>
+<g clip-path="url(#img-416b9fd1-19)">
+  <g id="img-416b9fd1-20">
+    <g pointer-events="visible" opacity="1" fill="#FFFFFF" stroke="#000000" stroke-opacity="0.000" class="guide background" id="img-416b9fd1-21">
+      <rect x="21.98" y="213.81" width="125.42" height="71.7"/>
+    </g>
+    <g class="guide ygridlines xfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="img-416b9fd1-22">
+      <path fill="none" d="M21.98,283.51 L 147.4 283.51"/>
+      <path fill="none" d="M21.98,266.59 L 147.4 266.59"/>
+      <path fill="none" d="M21.98,249.66 L 147.4 249.66"/>
+      <path fill="none" d="M21.98,232.74 L 147.4 232.74"/>
+      <path fill="none" d="M21.98,215.81 L 147.4 215.81"/>
+    </g>
+    <g class="guide xgridlines yfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="img-416b9fd1-23">
+      <path fill="none" d="M23.98,213.81 L 23.98 285.51"/>
+      <path fill="none" d="M54.33,213.81 L 54.33 285.51"/>
+      <path fill="none" d="M84.69,213.81 L 84.69 285.51"/>
+      <path fill="none" d="M115.04,213.81 L 115.04 285.51"/>
+      <path fill="none" d="M145.4,213.81 L 145.4 285.51"/>
+    </g>
+    <g class="plotpanel" id="img-416b9fd1-24">
+      <g stroke-width="0.3" fill="#000000" fill-opacity="0.000" class="geometry" stroke-dasharray="none" stroke="#0000FF" id="img-416b9fd1-25">
+        <path fill="none" d="M24.59,275.05 L 25.19 272.12 25.8 269.23 26.41 266.35 27.01 263.44 27.62 260.48 28.23 257.44 28.84 254.25 29.44 242.08 30.05 229.68 30.66 225.67 31.26 231.24 31.87 236.77 32.48 238.18 33.08 244.53 33.69 250.44 34.3 254.31 34.91 260.67 35.51 261.47 36.12 260.92 36.73 260.6 37.33 260.45 37.94 260.2 38.55 259.97 39.16 259.6 39.76 259 40.37 258.02 40.98 256.78 41.58 255.61 42.19 254.53 42.8 253.55 43.41 252.55 44.01 238.3 44.62 225.14 45.23 218.48 45.83 217.08 46.44 221.63 47.05 225.61 47.66 229.45 48.26 233.63 48.87 239.02 49.48 242.46 50.08 244.62 50.69 245.54 51.3 244.98 51.91 244.5 52.51 244.13 53.12 243.55 53.73 242.98 54.33 242.4 54.94 241.82 55.55 241.22 56.16 240.6 56.76 239.95 57.37 239.26 57.98 238.51 58.58 226.73 59.19 218.87 59.8 218.08 60.4 221.07 61.01 224.66 61.62 226.16 62.23 223.05 62.83 222.86 63.44 218.25 64.05 216.95 64.65 220.46 65.26 220.37 65.87 220.29 66.48 220.2 67.08 220.14 67.69 220.04 68.3 219.94 68.9 219.84 69.51 219.74 70.12 219.62 70.73 219.46 71.33 219.21 71.94 219.08 72.55 218.93 73.15 217.02 73.76 216.17 74.37 216.78 74.98 217.75 75.58 220.69 76.19 220.91 76.8 222.61 77.4 224.39 78.01 224.53 78.62 220.4 79.23 219.69 79.83 219.55 80.44 219.4 81.05 219.25 81.65 219.09 82.26 218.92 82.87 218.75 83.47 218.56 84.08 218.37 84.69 218.16 85.3 217.93 85.9 217.68 86.51 217.37 87.12 216.95 87.72 218.31 88.33 220.35 88.94 223.87 89.55 224.57 90.15 225.86 90.76 225 91.37 228.72 91.97 232.95 92.58 236.59 93.19 240.09 93.8 241.44 94.4 240.35 95.01 239.24 95.62 238.08 96.22 236.91 96.83 236.36 97.44 235.9 98.05 234.6 98.65 233.22 99.26 231.74 99.87 230.14 100.47 228.37 101.08 226.32 101.69 223.77 102.3 222.22 102.9 222.17 103.51 224.35 104.12 227.48 104.72 229.66 105.33 228.05 105.94 232.96 106.55 235.84 107.15 239.72 107.76 245.26 108.37 248.44 108.97 246.81 109.58 245.14 110.19 244.41 110.79 243.73 111.4 242.85 112.01 242.28 112.62 240.51 113.22 238.61 113.83 236.6 114.44 234.41 115.04 232 115.65 229.22 116.26 225.69 116.87 225.32 117.47 226.92 118.08 232.2 118.69 237.89 119.29 239.78 119.9 236.28 120.51 240.97 121.12 244.36 121.72 247.87 122.33 255.22 122.94 262.44 123.54 256.62 124.15 250.54 124.76 243.92 125.37 236.19 125.97 225.43"/>
+      </g>
+    </g>
+  </g>
+</g>
+  <g class="guide ylabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="img-416b9fd1-26">
+    <text x="20.98" y="283.51" text-anchor="end" dy="0.35em">0.004</text>
+    <text x="20.98" y="266.59" text-anchor="end" dy="0.35em">0.006</text>
+    <text x="20.98" y="249.66" text-anchor="end" dy="0.35em">0.008</text>
+    <text x="20.98" y="232.74" text-anchor="end" dy="0.35em">0.010</text>
+    <text x="20.98" y="215.81" text-anchor="end" dy="0.35em">0.012</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-27">
+    <text x="8.81" y="247.66" text-anchor="middle" dy="0.35em" transform="rotate(-90, 8.81, 249.66)">Humidity Ratio (moisture content)</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-28">
+    <text x="84.69" y="208.2" text-anchor="middle" dy="0.6em">Humidity</text>
+  </g>
+</g>
+<g stroke="#000000" stroke-opacity="0.000" fill="#FFFFFF" id="img-416b9fd1-29">
+  <rect x="152.4" y="101.6" width="152.4" height="101.6"/>
+</g>
+<g class="plotroot xscalable yscalable" id="img-416b9fd1-30">
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-31">
+    <text x="239.46" y="191.59" text-anchor="middle" dy="0.6em">Time (hrs)</text>
+  </g>
+  <g class="guide xlabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="img-416b9fd1-32">
+    <text x="181.12" y="184.91" text-anchor="middle" dy="0.6em">0</text>
+    <text x="210.29" y="184.91" text-anchor="middle" dy="0.6em">50</text>
+    <text x="239.46" y="184.91" text-anchor="middle" dy="0.6em">100</text>
+    <text x="268.63" y="184.91" text-anchor="middle" dy="0.6em">150</text>
+    <text x="297.8" y="184.91" text-anchor="middle" dy="0.6em">200</text>
+  </g>
+<g clip-path="url(#img-416b9fd1-33)">
+  <g id="img-416b9fd1-34">
+    <g pointer-events="visible" opacity="1" fill="#FFFFFF" stroke="#000000" stroke-opacity="0.000" class="guide background" id="img-416b9fd1-35">
+      <rect x="179.12" y="112.21" width="120.67" height="71.7"/>
+    </g>
+    <g class="guide ygridlines xfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="img-416b9fd1-36">
+      <path fill="none" d="M179.12,181.91 L 299.8 181.91"/>
+      <path fill="none" d="M179.12,164.99 L 299.8 164.99"/>
+      <path fill="none" d="M179.12,148.06 L 299.8 148.06"/>
+      <path fill="none" d="M179.12,131.14 L 299.8 131.14"/>
+      <path fill="none" d="M179.12,114.21 L 299.8 114.21"/>
+    </g>
+    <g class="guide xgridlines yfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="img-416b9fd1-37">
+      <path fill="none" d="M181.12,112.21 L 181.12 183.91"/>
+      <path fill="none" d="M210.29,112.21 L 210.29 183.91"/>
+      <path fill="none" d="M239.46,112.21 L 239.46 183.91"/>
+      <path fill="none" d="M268.63,112.21 L 268.63 183.91"/>
+      <path fill="none" d="M297.8,112.21 L 297.8 183.91"/>
+    </g>
+    <g class="plotpanel" id="img-416b9fd1-38">
+      <g stroke-width="0.3" fill="#000000" fill-opacity="0.000" class="geometry" stroke-dasharray="none" stroke="#0000FF" id="img-416b9fd1-39">
+        <path fill="none" d="M181.71,181.91 L 182.29 175.49 182.88 181.31 183.46 181.47 184.04 181.53 184.63 181.56 185.21 181.57 185.79 181.55 186.38 181.24 186.96 176.04 187.54 175.84 188.13 175.27 188.71 174.45 189.29 174.93 189.88 176.79 190.46 176.65 191.04 174.49 191.63 172.27 192.21 165.98 192.79 181.65 193.38 181.57 193.96 181.51 194.54 181.53 195.13 181.55 195.71 181.43 196.29 181.47 196.88 181.44 197.46 181.51 198.04 181.52 198.63 181.35 199.21 180.58 199.79 180.42 200.38 174.62 200.96 155.72 201.54 134.58 202.13 118.64 202.71 133.81 203.29 167.65 203.88 157.72 204.46 161.45 205.04 160.22 205.63 151.49 206.21 158.65 206.79 180.01 207.38 181.48 207.96 181.66 208.54 181.23 209.13 181.26 209.71 181.39 210.29 181.32 210.88 181.35 211.46 181.36 212.04 181.36 212.63 181.33 213.21 181.26 213.79 181.11 214.38 173.15 214.96 151.78 215.54 142.17 216.13 117.43 216.71 121.31 217.29 148.8 217.88 129.44 218.46 125.19 219.04 131.39 219.63 137.66 220.21 140.3 220.79 181.72 221.38 181.81 221.96 181.83 222.54 181.84 223.13 181.79 223.71 181.81 224.29 181.82 224.88 181.82 225.46 181.82 226.04 181.82 226.63 181.32 227.21 180.36 227.8 180.32 228.38 170.94 228.96 159.12 229.55 149.71 230.13 125.59 230.71 138.66 231.3 154.56 231.88 125.69 232.46 123.43 233.05 118.34 233.63 124.33 234.21 147.51 234.8 181.91 235.38 181.91 235.96 181.91 236.55 181.91 237.13 181.91 237.71 181.91 238.3 181.91 238.88 181.91 239.46 181.91 240.05 181.91 240.63 181.91 241.21 181.91 241.8 181.91 242.38 181.91 242.96 181.91 243.55 181.91 244.13 181.91 244.71 181.91 245.3 181.91 245.88 181.91 246.46 181.91 247.05 181.91 247.63 181.91 248.21 181.91 248.8 181.91 249.38 181.91 249.96 181.91 250.55 181.91 251.13 181.91 251.71 181.91 252.3 181.66 252.88 181.67 253.46 181.68 254.05 181.69 254.63 181.69 255.21 181.68 255.8 181.66 256.38 181.63 256.96 179.95 257.55 177.01 258.13 171.99 258.71 170.47 259.3 173.02 259.88 168.66 260.46 171.39 261.05 169.42 261.63 169.65 262.21 168.13 262.8 181.86 263.38 181.89 263.96 181.88 264.55 181.78 265.13 181.78 265.71 181.73 266.3 181.47 266.88 181.25 267.46 181.24 268.05 181.25 268.63 181.22 269.21 181.11 269.8 180.92 270.38 178.79 270.96 172.69 271.55 163.34 272.13 146.58 272.71 145.98 273.3 159.92 273.88 139.43 274.47 137.47 275.05 145.02 275.63 140.86 276.22 153.53 276.8 181.91 277.38 181.91 277.97 181.91 278.55 181.91 279.13 181.91"/>
+      </g>
+    </g>
+  </g>
+</g>
+  <g class="guide ylabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="img-416b9fd1-40">
+    <text x="178.12" y="181.91" text-anchor="end" dy="0.35em">0</text>
+    <text x="178.12" y="164.99" text-anchor="end" dy="0.35em">5.0×10⁴</text>
+    <text x="178.12" y="148.06" text-anchor="end" dy="0.35em">1.0×10⁵</text>
+    <text x="178.12" y="131.14" text-anchor="end" dy="0.35em">1.5×10⁵</text>
+    <text x="178.12" y="114.21" text-anchor="end" dy="0.35em">2.0×10⁵</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-41">
+    <text x="161.21" y="146.06" text-anchor="middle" dy="0.35em" transform="rotate(-90, 161.21, 148.06)">PM2.5 Removed (micrograms)</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-42">
+    <text x="239.46" y="106.6" text-anchor="middle" dy="0.6em">PM2.5 Removed by Filters</text>
+  </g>
+</g>
+<g stroke="#000000" stroke-opacity="0.000" fill="#FFFFFF" id="img-416b9fd1-43">
+  <rect x="0" y="101.6" width="152.4" height="101.6"/>
+</g>
+<g class="plotroot xscalable yscalable" id="img-416b9fd1-44">
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-45">
+    <text x="114.9" y="191.59" text-anchor="middle" dy="0.6em">Time (hrs)</text>
+  </g>
+  <g class="guide xlabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="img-416b9fd1-46">
+    <text x="84.4" y="184.91" text-anchor="middle" dy="0.6em">0</text>
+    <text x="99.65" y="184.91" text-anchor="middle" dy="0.6em">50</text>
+    <text x="114.9" y="184.91" text-anchor="middle" dy="0.6em">100</text>
+    <text x="130.15" y="184.91" text-anchor="middle" dy="0.6em">150</text>
+    <text x="145.4" y="184.91" text-anchor="middle" dy="0.6em">200</text>
+  </g>
+<g clip-path="url(#img-416b9fd1-47)">
+  <g id="img-416b9fd1-48">
+    <g pointer-events="visible" opacity="1" fill="#FFFFFF" stroke="#000000" stroke-opacity="0.000" class="guide background" id="img-416b9fd1-49">
+      <rect x="82.4" y="112.21" width="65" height="71.7"/>
+    </g>
+    <g class="guide ygridlines xfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="img-416b9fd1-50">
+      <path fill="none" d="M82.4,181.91 L 147.4 181.91"/>
+      <path fill="none" d="M82.4,170.63 L 147.4 170.63"/>
+      <path fill="none" d="M82.4,159.35 L 147.4 159.35"/>
+      <path fill="none" d="M82.4,148.06 L 147.4 148.06"/>
+      <path fill="none" d="M82.4,136.78 L 147.4 136.78"/>
+      <path fill="none" d="M82.4,125.5 L 147.4 125.5"/>
+      <path fill="none" d="M82.4,114.21 L 147.4 114.21"/>
+    </g>
+    <g class="guide xgridlines yfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="img-416b9fd1-51">
+      <path fill="none" d="M84.4,112.21 L 84.4 183.91"/>
+      <path fill="none" d="M99.65,112.21 L 99.65 183.91"/>
+      <path fill="none" d="M114.9,112.21 L 114.9 183.91"/>
+      <path fill="none" d="M130.15,112.21 L 130.15 183.91"/>
+      <path fill="none" d="M145.4,112.21 L 145.4 183.91"/>
+    </g>
+    <g class="plotpanel" id="img-416b9fd1-52">
+      <g stroke-width="0.3" fill="#000000" fill-opacity="0.000" class="geometry" stroke-dasharray="none" stroke="#0000FF" id="img-416b9fd1-53">
+        <path fill="none" d="M84.71,114.21 L 85.01 145.3 85.32 148.22 85.62 150.35 85.93 152.19 86.23 153.91 86.54 155.59 86.84 157.35 87.14 155.05 87.45 151.83 87.76 143.26 88.06 142.71 88.36 143.09 88.67 145.33 88.98 142.42 89.28 142.42 89.58 142.42 89.89 142.42 90.2 142.43 90.5 142.44 90.8 142.44 91.11 142.43 91.42 142.43 91.72 142.42 92.02 143.52 92.33 144.69 92.64 145.92 92.94 147.08 93.24 148.44 93.55 150.83 93.86 157.26 94.16 164.48 94.46 158.69 94.77 149.86 95.08 144.47 95.38 144.64 95.68 147.12 95.99 146.67 96.3 142.42 96.6 142.42 96.9 142.42 97.21 142.42 97.52 142.42 97.82 142.68 98.12 144.78 98.43 145.15 98.74 145.9 99.04 149.05 99.34 151.62 99.65 154.49 99.96 157.22 100.26 159.9 100.56 162.6 100.87 165.44 101.18 168.58 101.48 172.5 101.78 163.1 102.09 150.96 102.4 143.72 102.7 144.25 103 146.36 103.31 148.48 103.62 142.42 103.92 142.42 104.22 142.44 104.53 142.45 104.84 142.58 105.14 143.5 105.44 144.02 105.75 144.42 106.05 144.6 106.36 145.21 106.66 145.73 106.97 146.2 107.27 146.66 107.58 147.11 107.88 146.65 108.19 146.63 108.49 154.14 108.8 161.87 109.1 157.14 109.41 148.91 109.71 142.42 110.02 142.63 110.32 142.42 110.63 143.03 110.93 142.42 111.24 142.42 111.54 142.42 111.85 142.42 112.15 142.42 112.46 142.42 112.76 142.42 113.07 142.42 113.37 142.42 113.68 142.42 113.98 142.42 114.29 142.42 114.6 142.42 114.9 142.42 115.2 142.42 115.51 142.44 115.82 142.44 116.12 142.44 116.42 144.31 116.73 149.16 117.04 153.5 117.34 153.83 117.64 153.88 117.95 153.51 118.26 152.04 118.56 153.9 118.86 155.83 119.17 149.43 119.48 147.66 119.78 147.66 120.08 147.66 120.39 147.66 120.69 147.66 121 147.66 121.3 147.7 121.61 148.91 121.91 150.1 122.22 151.24 122.52 152.34 122.83 153.45 123.13 154.6 123.44 155.84 123.74 152.72 124.05 148.66 124.35 143.53 124.66 143.57 124.96 143.95 125.27 145.97 125.57 142.42 125.88 142.42 126.18 142.42 126.49 142.42 126.79 142.53 127.1 142.79 127.4 142.9 127.71 142.42 128.01 142.42 128.32 142.42 128.62 142.42 128.93 144.53 129.23 147.73 129.54 150.99 129.84 154.2 130.15 157.57 130.45 161.45 130.76 166.25 131.06 159.2 131.37 150.05 131.67 143.47 131.98 143.63 132.28 144.24 132.59 144.6 132.89 142.42 133.2 142.42 133.5 142.42 133.81 142.42 134.11 142.42 134.42 142.42 134.72 142.42 135.03 142.42 135.33 142.42 135.64 142.42"/>
+      </g>
+    </g>
+  </g>
+</g>
+  <g class="guide ylabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="img-416b9fd1-54">
+    <text x="81.4" y="181.91" text-anchor="end" dy="0.35em">0</text>
+    <text x="81.4" y="170.63" text-anchor="end" dy="0.35em">10</text>
+    <text x="81.4" y="159.35" text-anchor="end" dy="0.35em">20</text>
+    <text x="81.4" y="148.06" text-anchor="end" dy="0.35em">30</text>
+    <text x="81.4" y="136.78" text-anchor="end" dy="0.35em">40</text>
+    <text x="81.4" y="125.5" text-anchor="end" dy="0.35em">50</text>
+    <text x="81.4" y="114.21" text-anchor="end" dy="0.35em">60</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-55">
+    <text x="75.05" y="148.06" text-anchor="end" dy="0.35em">PM2.5 Concentration (micrograms / m^3)</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-56">
+    <text x="114.9" y="106.6" text-anchor="middle" dy="0.6em">PM2.5 Concentration (µg)</text>
+  </g>
+</g>
+<g stroke="#000000" stroke-opacity="0.000" fill="#FFFFFF" id="img-416b9fd1-57">
+  <rect x="152.4" y="0" width="152.4" height="101.6"/>
+</g>
+<g class="plotroot xscalable yscalable" id="img-416b9fd1-58">
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-59">
+    <text x="236.75" y="89.99" text-anchor="middle" dy="0.6em">Time (hrs)</text>
+  </g>
+  <g class="guide xlabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="img-416b9fd1-60">
+    <text x="175.7" y="83.31" text-anchor="middle" dy="0.6em">0</text>
+    <text x="206.23" y="83.31" text-anchor="middle" dy="0.6em">50</text>
+    <text x="236.75" y="83.31" text-anchor="middle" dy="0.6em">100</text>
+    <text x="267.28" y="83.31" text-anchor="middle" dy="0.6em">150</text>
+    <text x="297.8" y="83.31" text-anchor="middle" dy="0.6em">200</text>
+  </g>
+<g clip-path="url(#img-416b9fd1-61)">
+  <g id="img-416b9fd1-62">
+    <g pointer-events="visible" opacity="1" fill="#FFFFFF" stroke="#000000" stroke-opacity="0.000" class="guide background" id="img-416b9fd1-63">
+      <rect x="173.7" y="10.61" width="126.09" height="71.7"/>
+    </g>
+    <g class="guide ygridlines xfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="img-416b9fd1-64">
+      <path fill="none" d="M173.7,80.31 L 299.8 80.31"/>
+      <path fill="none" d="M173.7,69.03 L 299.8 69.03"/>
+      <path fill="none" d="M173.7,57.75 L 299.8 57.75"/>
+      <path fill="none" d="M173.7,46.46 L 299.8 46.46"/>
+      <path fill="none" d="M173.7,35.18 L 299.8 35.18"/>
+      <path fill="none" d="M173.7,23.9 L 299.8 23.9"/>
+      <path fill="none" d="M173.7,12.61 L 299.8 12.61"/>
+    </g>
+    <g class="guide xgridlines yfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="img-416b9fd1-65">
+      <path fill="none" d="M175.7,10.61 L 175.7 82.31"/>
+      <path fill="none" d="M206.23,10.61 L 206.23 82.31"/>
+      <path fill="none" d="M236.75,10.61 L 236.75 82.31"/>
+      <path fill="none" d="M267.28,10.61 L 267.28 82.31"/>
+      <path fill="none" d="M297.8,10.61 L 297.8 82.31"/>
+    </g>
+    <g class="plotpanel" id="img-416b9fd1-66">
+      <g stroke-width="0.3" fill="#000000" fill-opacity="0.000" class="geometry" stroke-dasharray="none" stroke="#0000FF" id="img-416b9fd1-67">
+        <path fill="none" d="M176.32,80.31 L 176.93 80.31 177.54 80.31 178.15 80.31 178.76 80.31 179.37 80.31 179.98 80.31 180.59 80.31 181.2 57.33 181.81 33.75 182.42 17.42 183.03 16.13 183.64 16.24 184.25 16.04 184.86 12.61 185.47 12.61 186.08 13.48 186.69 14.05 187.3 14.22 187.91 16.22 188.52 18.72 189.14 21.52 189.75 23.94 190.36 26.41 190.97 28.52 191.58 30.02 192.19 31.66 192.8 32.78 193.41 33.46 194.02 33.84 194.63 33.84 195.24 33.84 195.85 25.39 196.46 18.17 197.07 14.64 197.68 13.56 198.29 13.26 198.9 13.13 199.51 12.61 200.12 12.61 200.73 13.43 201.34 13.59 201.96 15.88 202.57 22.6 203.18 22.6 203.79 23.19 204.4 24.52 205.01 24.52 205.62 24.52 206.23 24.52 206.84 24.52 207.45 24.52 208.06 24.52 208.67 24.52 209.28 24.52 209.89 24.52 210.5 18.08 211.11 18.01 211.72 12.9 212.33 12.84 212.94 12.84 213.55 12.84 214.16 12.61 214.78 12.61 215.39 12.61 216 12.61 216.61 13.41 217.22 13.41 217.83 13.41 218.44 13.41 219.05 13.49 219.66 13.49 220.27 13.49 220.88 13.49 221.49 13.49 222.1 13.49 222.71 14.18 223.32 16.45 223.93 16.45 224.54 16.45 225.15 14.69 225.76 12.97 226.37 12.99 226.98 12.79 227.6 13.39 228.21 13.73 228.82 12.61 229.43 12.61 230.04 12.61 230.65 12.61 231.26 12.61 231.87 12.61 232.48 12.61 233.09 12.61 233.7 12.61 234.31 12.61 234.92 12.61 235.53 12.61 236.14 12.64 236.75 12.64 237.36 12.65 237.97 12.69 238.58 12.7 239.19 12.71 239.8 12.69 240.42 12.64 241.03 12.63 241.64 12.62 242.25 12.64 242.86 12.64 243.47 12.61 244.08 12.61 244.69 12.82 245.3 12.82 245.91 12.86 246.52 12.86 247.13 12.86 247.74 12.86 248.35 12.92 248.96 14.43 249.57 16.33 250.18 16.33 250.79 16.33 251.4 16.33 252.01 16.33 252.62 16.33 253.24 16.33 253.85 16.33 254.46 15.31 255.07 14.11 255.68 13.05 256.29 13.21 256.9 13.36 257.51 13.19 258.12 12.61 258.73 12.61 259.34 12.69 259.95 12.72 260.56 12.72 261.17 12.72 261.78 12.76 262.39 14.66 263 16.51 263.61 18.3 264.22 20.86 264.83 20.93 265.44 20.93 266.06 20.93 266.67 20.93 267.28 20.93 267.89 20.93 268.5 20.93 269.11 18.46 269.72 15.27 270.33 13.58 270.94 13.61 271.55 13.83 272.16 13.94 272.77 12.61 273.38 12.61 273.99 12.61 274.6 12.61 275.21 12.61 275.82 12.61 276.43 12.61 277.04 12.61 277.65 12.61 278.26 12.61"/>
+      </g>
+    </g>
+  </g>
+</g>
+  <g class="guide ylabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="img-416b9fd1-68">
+    <text x="172.7" y="80.31" text-anchor="end" dy="0.35em">400</text>
+    <text x="172.7" y="69.03" text-anchor="end" dy="0.35em">500</text>
+    <text x="172.7" y="57.75" text-anchor="end" dy="0.35em">600</text>
+    <text x="172.7" y="46.46" text-anchor="end" dy="0.35em">700</text>
+    <text x="172.7" y="35.18" text-anchor="end" dy="0.35em">800</text>
+    <text x="172.7" y="23.9" text-anchor="end" dy="0.35em">900</text>
+    <text x="172.7" y="12.61" text-anchor="end" dy="0.35em">1000</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-69">
+    <text x="161.21" y="44.46" text-anchor="middle" dy="0.35em" transform="rotate(-90, 161.21, 46.46)">CO2 Concentration (ppm)</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-70">
+    <text x="236.75" y="5" text-anchor="middle" dy="0.6em">CO2 Concentration inside room (ppm)</text>
+  </g>
+</g>
+<g stroke="#000000" stroke-opacity="0.000" fill="#FFFFFF" id="img-416b9fd1-71">
+  <rect x="0" y="0" width="152.4" height="101.6"/>
+</g>
+<g class="plotroot xscalable yscalable" id="img-416b9fd1-72">
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-73">
+    <text x="84.35" y="89.99" text-anchor="middle" dy="0.6em">Time (hrs)</text>
+  </g>
+  <g class="guide xlabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="img-416b9fd1-74">
+    <text x="23.31" y="83.31" text-anchor="middle" dy="0.6em">0</text>
+    <text x="53.83" y="83.31" text-anchor="middle" dy="0.6em">50</text>
+    <text x="84.35" y="83.31" text-anchor="middle" dy="0.6em">100</text>
+    <text x="114.88" y="83.31" text-anchor="middle" dy="0.6em">150</text>
+    <text x="145.4" y="83.31" text-anchor="middle" dy="0.6em">200</text>
+  </g>
+<g clip-path="url(#img-416b9fd1-75)">
+  <g id="img-416b9fd1-76">
+    <g pointer-events="visible" opacity="1" fill="#FFFFFF" stroke="#000000" stroke-opacity="0.000" class="guide background" id="img-416b9fd1-77">
+      <rect x="21.31" y="10.61" width="126.09" height="71.7"/>
+    </g>
+    <g class="guide ygridlines xfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="img-416b9fd1-78">
+      <path fill="none" d="M21.31,80.31 L 147.4 80.31"/>
+      <path fill="none" d="M21.31,63.39 L 147.4 63.39"/>
+      <path fill="none" d="M21.31,46.46 L 147.4 46.46"/>
+      <path fill="none" d="M21.31,29.54 L 147.4 29.54"/>
+      <path fill="none" d="M21.31,12.61 L 147.4 12.61"/>
+    </g>
+    <g class="guide xgridlines yfixed" stroke-dasharray="0.5,0.5" stroke-width="0.2" stroke="#D0D0E0" id="img-416b9fd1-79">
+      <path fill="none" d="M23.31,10.61 L 23.31 82.31"/>
+      <path fill="none" d="M53.83,10.61 L 53.83 82.31"/>
+      <path fill="none" d="M84.35,10.61 L 84.35 82.31"/>
+      <path fill="none" d="M114.88,10.61 L 114.88 82.31"/>
+      <path fill="none" d="M145.4,10.61 L 145.4 82.31"/>
+    </g>
+    <g class="plotpanel" id="img-416b9fd1-80">
+      <g stroke-width="0.3" fill="#000000" fill-opacity="0.000" class="geometry" stroke-dasharray="none" stroke="#0000FF" id="img-416b9fd1-81">
+        <path fill="none" d="M23.92,80.31 L 24.53 80.31 25.14 80.31 25.75 80.31 26.36 80.31 26.97 80.31 27.58 80.31 28.19 80.31 28.8 76.2 29.41 62.64 30.02 42.94 30.63 18.84 31.24 23.52 31.85 47.7 32.46 23.02 33.07 21.83 33.68 23.21 34.29 26.74 34.9 37.26 35.51 79.58 36.12 79.32 36.74 79.11 37.35 79.19 37.96 79.17 38.57 79.43 39.18 79.66 39.79 79.57 40.4 79.78 41.01 79.99 41.62 80.12 42.23 80.31 42.84 80.31 43.45 71.19 44.06 55.3 44.67 36.27 45.28 18.32 45.89 23.66 46.5 47.68 47.11 22.01 47.72 21.83 48.33 23.23 48.94 26.93 49.56 36.42 50.17 77.46 50.78 80.31 51.39 80.07 52 79.65 52.61 80.31 53.22 80.31 53.83 80.31 54.44 80.31 55.05 80.31 55.66 80.31 56.27 80.31 56.88 80.31 57.49 80.31 58.1 70.5 58.71 50.09 59.32 39.08 59.93 18.41 60.54 23.55 61.15 47.64 61.76 21.91 62.38 21.83 62.99 23.55 63.6 26.99 64.21 37 64.82 80.31 65.43 80.31 66.04 80.31 66.65 80.29 67.26 80.31 67.87 80.31 68.48 80.31 69.09 80.31 69.7 80.31 70.31 80.07 70.92 79.48 71.53 80.31 72.14 80.31 72.75 68.71 73.36 55.06 73.97 37.31 74.58 18.46 75.2 23.34 75.81 47.51 76.42 22.22 77.03 21.83 77.64 23.55 78.25 26.99 78.86 37.31 79.47 80.31 80.08 80.31 80.69 80.31 81.3 80.31 81.91 80.31 82.52 80.31 83.13 80.31 83.74 80.31 84.35 80.31 84.96 80.31 85.57 80.3 86.18 80.31 86.79 80.31 87.4 68.28 88.02 54.53 88.63 37.32 89.24 18.4 89.85 23.55 90.46 47.63 91.07 21.84 91.68 21.83 92.29 23.48 92.9 26.99 93.51 37.3 94.12 80.31 94.73 80.31 95.34 80.31 95.95 80.29 96.56 79.78 97.17 79.62 97.78 80.31 98.39 80.31 99 80.31 99.61 80.31 100.22 80.31 100.84 80.31 101.45 80.31 102.06 68.63 102.67 54.93 103.28 37.68 103.89 18.34 104.5 23.5 105.11 47.69 105.72 22.03 106.33 21.83 106.94 23.53 107.55 26.98 108.16 37.31 108.77 80.31 109.38 80.3 109.99 79.64 110.6 79.64 111.21 79.64 111.82 79.3 112.43 80.28 113.04 80.31 113.66 80.31 114.27 80.31 114.88 80.31 115.49 80.31 116.1 80.31 116.71 69.13 117.32 55.61 117.93 37.9 118.54 18.38 119.15 23.48 119.76 47.6 120.37 22.29 120.98 21.83 121.59 23.55 122.2 26.99 122.81 37.31 123.42 80.31 124.03 80.31 124.64 80.31 125.25 80.31 125.86 80.31"/>
+      </g>
+    </g>
+  </g>
+</g>
+  <g class="guide ylabels" font-size="2.82" font-family="'PT Sans Caption','Helvetica Neue','Helvetica',sans-serif" fill="#6C606B" id="img-416b9fd1-82">
+    <text x="20.3" y="80.31" text-anchor="end" dy="0.35em">0</text>
+    <text x="20.3" y="63.39" text-anchor="end" dy="0.35em">500</text>
+    <text x="20.3" y="46.46" text-anchor="end" dy="0.35em">1000</text>
+    <text x="20.3" y="29.54" text-anchor="end" dy="0.35em">1500</text>
+    <text x="20.3" y="12.61" text-anchor="end" dy="0.35em">2000</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-83">
+    <text x="8.81" y="44.46" text-anchor="middle" dy="0.35em" transform="rotate(-90, 8.81, 46.46)">Air Flow (CMH)</text>
+  </g>
+  <g font-size="3.88" font-family="'PT Sans','Helvetica Neue','Helvetica',sans-serif" fill="#564A55" stroke="#000000" stroke-opacity="0.000" id="img-416b9fd1-84">
+    <text x="84.35" y="5" text-anchor="middle" dy="0.6em">Air Flow into Building</text>
+  </g>
+</g>
+<defs>
+  <clipPath id="img-416b9fd1-5">
+  <path d="M250,213.81 L 299.8 213.81 299.8 285.51 250 285.51" />
+</clipPath>
+  <clipPath id="img-416b9fd1-19">
+  <path d="M21.98,213.81 L 147.4 213.81 147.4 285.51 21.98 285.51" />
+</clipPath>
+  <clipPath id="img-416b9fd1-33">
+  <path d="M179.12,112.21 L 299.8 112.21 299.8 183.91 179.12 183.91" />
+</clipPath>
+  <clipPath id="img-416b9fd1-47">
+  <path d="M82.4,112.21 L 147.4 112.21 147.4 183.91 82.4 183.91" />
+</clipPath>
+  <clipPath id="img-416b9fd1-61">
+  <path d="M173.7,10.61 L 299.8 10.61 299.8 82.31 173.7 82.31" />
+</clipPath>
+  <clipPath id="img-416b9fd1-75">
+  <path d="M21.31,10.61 L 147.4 10.61 147.4 82.31 21.31 82.31" />
+</clipPath>
+</defs>
+</svg>
