@@ -9,9 +9,6 @@ using Gadfly
 
 NLP_data = CSV.read("NLP_one_week.csv", nullable = false)
 
-test = DataFrame(test_x = 1:10, test_y = ones(10))
-
-plot(test, x = "test_x", y = "test_y", Geom.line)
 
 light_theme = Theme(
     background_color = "white",
@@ -94,9 +91,9 @@ HUMID_absorbed_plot =
 
 final = vstack(
     hstack(CMH_plot, CO2_plot),
-    hstack(PM25_plot, PM25_absorbed_plot),
-    hstack(HUMID_plot, HUMID_absorbed_plot)
+    hstack(PM25_plot, HUMID_plot)
+    #hstack(HUMID_plot, HUMID_absorbed_plot)
     )
 
-img = PNG("NLP_one_week.png", 12inch, 12inch)
+img = PNG("NLP_one_week_short.png", 12inch, 12inch)
 draw(img, final)
