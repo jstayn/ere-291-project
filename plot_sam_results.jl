@@ -95,5 +95,5 @@ final = vstack(
     #hstack(HUMID_plot, HUMID_absorbed_plot)
     )
 
-img = PNG("NLP_one_week_short.png", 12inch, 12inch)
+img = PNG("NLP_one_week_short.png", 12inch, 12inch, dpi = 1200)
 draw(img, final)
