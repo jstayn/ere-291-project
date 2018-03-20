@@ -177,5 +177,5 @@ ops_vs_cap = plot(
     light_theme
     )
 
-img = SVG("NPC vs Capital Costs.svg", 6inch, 6inch, dpi = 1200)
+img = SVG("NPC vs Capital Costs.svg", 6inch, 6inch)
 draw(img, ops_vs_cap)

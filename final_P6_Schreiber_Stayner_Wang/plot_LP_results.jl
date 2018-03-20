@@ -244,7 +244,7 @@ m = Model(solver = ClpSolver())
 ######################################
 
 # Minimize the total cost, equal to the sum of the cost of fan electricity over the operational period, plus the cost of PM2.5 filter replacements
-@objective(m, Min, Celec*((P + pressureDropSystem / 3600 / 1000)*sum(CMH)*T/24 + ISMRE*sum(kgMoistureRemoved)) + Cfilter*numFilters)
+@objective(m, Min, Celec*((P + pressureDropSystem / 3600 / 1000)*sum(CMH) + ISMRE*sum(kgMoistureRemoved)) + Cfilter*numFilters)
 
 
 ######################################
