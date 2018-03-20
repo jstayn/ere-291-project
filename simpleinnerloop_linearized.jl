@@ -9,6 +9,7 @@ using Clp
 using Cbc
 using AmplNLWriter
 
+using .inner_loop # Run small_NLP_inner_loop to load this module
 using Gadfly
 using NLP_loop
 
@@ -17,25 +18,13 @@ using NLP_loop
 ###############################
 
 # Currently testing a period of one year (8760) hours
-T = 8760
+T = 24
 T_repeat = 24
 
 data = readcsv("Room-Data_v3.0.csv")
 AQdata = readcsv("AirQualityData2016.csv")
 rooms = data[2:end,3]
 N = length(rooms)
-
-### Equipment Variables ###
-
-# max intake capacity of FAU model i [m3 air / hr]
-x = 2000 #dummy variable - need to merge with John's design loop - YP
-
-# efficiency of the fan of FAU model i [kWh / m3 air]
-P = .00045
-
-# minimum integrated seasonal moisture removal efficiency (ISMRE) [kWh/kg]
-ISMRE = 0.5
-
 
 ###################################################
 ############ Define parameters and data ###########
@@ -83,22 +72,21 @@ for i = 1:N
     roomHumidSource[rooms[i]] = humidityPerPerson .* roomOccupancy[rooms[i]]
 end
 
-CMHOrig = zeros(N,24)
-CMHpp = 55 #CMH per person, US guideline of 15 cfm/person
 
-for i = 1:N
-    CMHOrig[i,:] = CMHpp .* roomOccupancy[rooms[i]]
-end
 
-CMHOptResult = CMH_opt(T_repeat, N)
 
-CMH = zeros(N,T)
+#CMH = zeros(N,24)
+#CMHpp = 55 #CMH per person, US guideline of 15 cfm/person
 
-for i in 1:N
-    for j in 1:T_repeat
-        CMH[i,j] = max(CMHOrig[i,j], CMHOptResult[i,j])
-    end
-end
+#for i = 1:N
+    #CMH[i,:] = CMHpp .* roomOccupancy[rooms[i]]
+#end
+
+CMH = CMH_opt(T_repeat, N)
+
+#println(round.(Int, CMH_Orig))
+#println(CMH)
+
 
 # initial indoor CO2 concentration at t = 0
 CO2_0 = AMB_CO2[1]
@@ -114,21 +102,17 @@ airDensity = 1.225
 
 ### Equipment Parameters ###
 
+# efficiency of the fan of FAU model i [kWh / m3 air]
+P = .00045
+
 # PM2.5 absorption capacity per filter before replacement [ug/filter]
 k = 10^7
 
+# minimum integrated seasonal moisture removal efficiency (ISMRE) [kWh/kg]
+ISMRE = 0.5
+
 # efficiency of PM2.5 filter
 R = 0.8 #do we still need this? - YP
-
-# pressure drop through ducts [Pa]
-pressureDropDucts = 103
-
-# pressure drop through 1x HEPA filter [{Pa]
-pressureDropHEPAFilter = 250
-
-# pressure drop total [Pa]
-pressureDropSystem = pressureDropDucts + pressureDropHEPAFilter
-
 
 ### Cost Parameters ###
 
@@ -138,6 +122,7 @@ Celec = 1.4
 # cost per in-room PM2.5 filter [RMB/filter]
 Cfilter = 50
 
+######## Dependent parameters ########
 
 ####################################
 ######### Initialize Model #########
@@ -184,7 +169,7 @@ m = Model(solver = ClpSolver())
 ######################################
 
 # Minimize the total cost, equal to the sum of the cost of fan electricity over the operational period, plus the cost of PM2.5 filter replacements
-@objective(m, Min, Celec*((P + pressureDropSystem / 3600 / 1000)*sum(CMH)*T/24 + ISMRE*sum(kgMoistureRemoved)) + Cfilter*numFilters)
+@objective(m, Min, Celec*(P*sum(CMH)*T/24 + ISMRE*sum(kgMoistureRemoved)) + Cfilter*numFilters)
 
 
 ######################################
