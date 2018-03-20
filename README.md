@@ -1,5 +1,8 @@
 # ere-291-project
-Group Project for ERE 291 in Julia for optimization of HVAC systems in a building in Shanghai
+Group Project for ERE 291 in Julia for optimization of HVAC systems in a building in Shanghai.
+
+NOTE: The rest of this is out of date as of 2018-03-19. See readme.txt in final_Schreiber_Stayner_Wang for a better readme as well as a cleaner version of this code. 
+
 
 
 # Notes 2018-02-22
