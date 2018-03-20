@@ -1,0 +1,93 @@
+---
+title: ""
+output: 
+  github_document:
+    toc: true
+    toc_depth: 6
+---
+
+
+
+```{r include = "false"}
+
+library(tidyverse)
+
+df <- read_csv("pareto_data.csv")
+
+names(df)
+
+df %>%
+  filter(feasibility == "Feasible", AHU %in% c(1,2,3)) %>%
+  ggplot(aes(x = Cap_ex, y = NPC, color = factor(AHU))) +
+  geom_point() +
+  geom_point(
+    data = df %>% filter(feasibility == "Infeasible"), 
+    shape = "X",
+    size = 3
+  ) +
+  scale_color_discrete() +
+  scale_x_continuous(
+    name = "Capital Costs (RMB)",
+    labels = function(x) as.character(x / 1000) %>% str_c("k RMB")
+  ) +
+  scale_y_continuous(
+    name = "Net Present Cost (RMB)",
+    labels = function(y) as.character(y / 1000) %>% str_c("k RMB")
+  ) +
+  labs(title = "For a Small Building, NPC Rises with Capital Cost") +
+  theme_minimal()
+
+ggsave("pareto_curve_final.png", dpi = 500)
+```
+
+
+```{r}
+df %>%
+  filter(AHU %in% c(1,2,3)) %>%
+  ggplot(aes(x = Cap_ex, y = NPC, color = factor(AHU), shape = feasibility)) +
+  geom_point() +
+  scale_color_discrete() +
+  scale_x_continuous(
+    name = "Capital Costs (RMB)",
+    labels = function(x) as.character(x / 1000) %>% str_c("k RMB")
+  ) +
+  scale_y_continuous(
+    name = "Net Present Cost (RMB)",
+    labels = function(y) as.character(y / 1000) %>% str_c("k RMB")
+  ) +
+  scale_shape_manual(name = "", values = c("Feasible" = 16, "Infeasible" = 4)) +
+  labs(
+    title = "For a Relatively Small Building, NPC Rises with Capital Cost",
+    color = "AHU Number"
+  ) +
+  theme_minimal()
+```
+
+
+
+
+```{r, include = "false"}
+# Plot NPC vs number of dampers
+
+df %>%
+  filter(feasibility == "Feasible", AHU == 1) %>%
+  ggplot(aes(x = dampers, y = NPC)) +
+  geom_point() +
+  geom_point(
+    data = df %>% filter(feasibility == "Infeasible", AHU == 1), 
+    shape = "X",
+    size = 3
+  ) +
+  scale_x_continuous(
+    name = "Number of Dampers",
+    breaks = seq(1,13,1),
+    #labels = function(x) as.character(x / 1000) %>% str_c("k RMB")
+  ) +
+  scale_y_continuous(
+    name = "Net Present Cost (RMB)",
+    labels = function(y) as.character(y / 1000) %>% str_c("k RMB")
+  ) +
+  labs(title = "For Relatively Small Building, NPC Rises with Capital Cost") +
+  theme_minimal()
+```
+
