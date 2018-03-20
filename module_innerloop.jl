@@ -2,12 +2,16 @@
 
 module inner_loop
 
+include("module_NLP_loop.jl")
+
 using JuMP
 using Clp
 using Cbc
 using AmplNLWriter
 using Gadfly
-using NLP_loop
+
+
+using inner_loop.NLP_loop
 
 export OpsOptLP
 
