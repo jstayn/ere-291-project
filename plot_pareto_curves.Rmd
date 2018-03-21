@@ -11,6 +11,7 @@ output:
 ```{r include = "false"}
 
 library(tidyverse)
+library(ggrepel)
 
 df <- read_csv("pareto_data.csv")
 
@@ -36,8 +37,6 @@ df %>%
   ) +
   labs(title = "For a Small Building, NPC Rises with Capital Cost") +
   theme_minimal()
-
-ggsave("pareto_curve_final.png", dpi = 500)
 ```
 
 
@@ -57,37 +56,85 @@ df %>%
   ) +
   scale_shape_manual(name = "", values = c("Feasible" = 16, "Infeasible" = 4)) +
   labs(
-    title = "For a Relatively Small Building, NPC Rises with Capital Cost",
+    title = "For a Small Building, NPC Rises with Capital Cost",
     color = "AHU Number"
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.title = element_text(size = 12), plot.title = element_text(hjust = 0.5))
+
+ggsave(
+  "pareto_curve_final.png", 
+  width = unit(7, "inches"), 
+  height = unit(4, "inches"),
+  dpi = 1200
+)
 ```
 
 
 
 
 ```{r, include = "false"}
-# Plot NPC vs number of dampers
+df %>%
+  filter(feasibility == "Feasible") %>%
+  top_n(-1, NPC)
+```
+
+
+```{r}
+discount_rate <- seq(0.01, 0.15, 0.01)
+
+
+max_rate <- 0.30
+
+discount_df <-
+  tibble(AHU = rep(1, max_rate * 100), discount_rate = seq(0.01, max_rate, 0.01))
+
+
+NPC_func <- function(cap, ops, d) {
+  cap + sum(ops / (1 + d)^seq(1,20))
+}
 
 df %>%
-  filter(feasibility == "Feasible", AHU == 1) %>%
-  ggplot(aes(x = dampers, y = NPC)) +
-  geom_point() +
-  geom_point(
-    data = df %>% filter(feasibility == "Infeasible", AHU == 1), 
-    shape = "X",
-    size = 3
-  ) +
+  filter(feasibility == "Feasible") %>%
+  top_n(-2, NPC) %>%
+  select(-NPC) %>%
+  left_join(discount_df, by = "AHU") %>%
+  mutate(
+    NPC = pmap_dbl(
+      list(Cap_ex, Op_ex, discount_rate),
+      NPC_func
+    )
+  ) %>%
+  ggplot(aes(x = discount_rate, y = NPC, color = factor(dampers))) +
+  geom_line() +
   scale_x_continuous(
-    name = "Number of Dampers",
-    breaks = seq(1,13,1),
-    #labels = function(x) as.character(x / 1000) %>% str_c("k RMB")
+    name = "Discount Rate",
+    labels = scales::percent
   ) +
   scale_y_continuous(
     name = "Net Present Cost (RMB)",
     labels = function(y) as.character(y / 1000) %>% str_c("k RMB")
   ) +
-  labs(title = "For Relatively Small Building, NPC Rises with Capital Cost") +
-  theme_minimal()
+  scale_color_discrete(
+    name = "AHU Model",
+    labels = c(
+      "12" = "Higher Opex, Lower Capex", 
+      "13" = "Lower Capex, Higher Opex"
+      )
+  ) +
+  labs(
+    title = "Stage 2 LP Discount Rate Sensitivity Analysis"
+    #subtitle = "Model is not Very Sensitive to Discount Rate"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+
+ggsave(
+  "discount_rate_sensitivity.png", 
+  width = unit(7, "inches"),
+  height = unit(4, "inches"),
+  dpi = 600
+)
+
 ```
 
